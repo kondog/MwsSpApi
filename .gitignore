@@ -2,6 +2,12 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+### Java
+*.class
+*.jar
+*.war
+*.ear
 *.properties
 
 ### IntelliJ IDEA ###
@@ -37,3 +43,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Other
+*.log
+*.swp
+*.bak
