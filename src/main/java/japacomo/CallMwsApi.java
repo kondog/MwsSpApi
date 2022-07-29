@@ -205,11 +205,6 @@ public class CallMwsApi {
             throw new RuntimeException(e);
         }
     }
-//    public void callWithV4Signer() {
-//        Request request = this.makeReportRequest();
-//        Request signedRequest = this.makeRequestSigned(request);
-//        this.callRequest(signedRequest);
-//    }
     public void takeReportFromURL(String downloadPath, String srcURL){
         logger.log(Level.INFO, downloadPath);
         logger.log(Level.INFO, srcURL);
