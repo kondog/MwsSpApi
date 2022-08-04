@@ -134,6 +134,11 @@
             <scope>system</scope>
             <systemPath>${basedir}/mylib/sellingpartnerapi-aa-java-1.0-jar-with-dependencies.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
 
     <properties>

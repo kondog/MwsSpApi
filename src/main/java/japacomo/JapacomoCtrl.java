@@ -16,19 +16,12 @@ public class JapacomoCtrl {
     public static void main(String[] args){
         logger.log(Level.INFO, "/////   START   /////");
         String types[] = {
-//                "GET_FLAT_FILE_OPEN_LISTINGS_DATA", //これは通る
-//                "GET_LEDGER_DETAIL_VIEW_DATA",
-//                "GET_MERCHANT_LISTINGS_ALL_DATA", //これは通る
-
-
-//                "GET_FBA_FULFILLMENT_MONTHLY_INVENTORY_DATA",
-//                "GET_FBA_FULFILLMENT_CUSTOMER_SHIPMENT_SALES_DATA",
-                "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_TAX",
- //               "GET_FBA_FULFILLMENT_INVENTORY_RECEIPTS_DATA",
- //               "GET_FBA_FULFILLMENT_CUSTOMER_RETURNS_DATA",
- //               "GET_FBA_FULFILLMENT_INVENTORY_ADJUSTMENTS_DATA",
- //               "GET_FBA_REIMBURSEMENTS_DATA",
- //               "GET_FBA_FULFILLMENT_REMOVAL_SHIPMENT_DETAIL_DATA"
+                "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL", //通る
+                "GET_FLAT_FILE_OPEN_LISTINGS_DATA", //通る
+                "GET_RESERVED_INVENTORY_DATA", //FATAL
+                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA", //通らない
+                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA", //通らない
+                "GET_RESERVED_INVENTORY_DATA", //通らない
         };
 
         for(String type :types) {
@@ -57,6 +50,9 @@ public class JapacomoCtrl {
 
         logger.log(Level.INFO, "*****waitUntilReportCompleted*****" + reportID);
         String reportDocumentID = api.waitUntilReportCompleted(reportID);
+        if(reportDocumentID.equals("FATAL")){
+            return false;
+        }
 
         logger.log(Level.INFO, "*****takeReportAccessURL*****" + reportDocumentID);
         String reportURL = api.takeReportAccessURL(reportDocumentID);

@@ -148,6 +148,9 @@ public class CallMwsApi {
             String reportStatusJson = this.callRequest(signedRequest);
             logger.log(Level.INFO, reportStatusJson);
             String reportDocumentId = takeReportDocumentID(reportStatusJson);
+            if(!reportDocumentId.equals("FATAL")){
+                return "FATAL";
+            }
             if(!reportDocumentId.equals("")){
                 return reportDocumentId;
             }
@@ -166,6 +169,10 @@ public class CallMwsApi {
             logger.log(Level.INFO, reportStatus.getProcessingStatus());
             if (reportStatus.getProcessingStatus() == null) {
                 return "";
+            }
+            if(reportStatus.getProcessingStatus().equals("FATAL")) {
+                logger.log(Level.WARNING, reportStatus.getProcessingStatus());
+                return "FATAL";
             }
             if(reportStatus.getProcessingStatus().equals("DONE")) {
                 return reportStatus.getReportDocumentId();
