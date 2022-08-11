@@ -6,19 +6,15 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class TakeSpecifiedProperty {
-    private static final String INIT_FILE_PATH = "src/main/resources/conf/us.config.properties";
-    private static final Properties properties;
+    private Properties properties;
 
-    private void PropertyUtil() throws Exception {
-    }
-
-    static {
+    public TakeSpecifiedProperty(String propertyFilePath){
         properties = new Properties();
         try {
-            properties.load(Files.newBufferedReader(Paths.get(INIT_FILE_PATH), StandardCharsets.UTF_8));
+            properties.load(Files.newBufferedReader(Paths.get(propertyFilePath), StandardCharsets.UTF_8));
         } catch (IOException e) {
             // ファイル読み込みに失敗
-            System.out.println(String.format("ファイルの読み込みに失敗しました。ファイル名:%s", INIT_FILE_PATH));
+            System.out.println(String.format("ファイルの読み込みに失敗しました。ファイル名:%s", propertyFilePath));
         }
     }
 
@@ -28,7 +24,7 @@ public class TakeSpecifiedProperty {
      * @param key キー
      * @return 値
      */
-    public static String getProperty(final String key) {
+    public String getProperty(final String key) {
         return getProperty(key, "");
     }
 
@@ -40,8 +36,8 @@ public class TakeSpecifiedProperty {
      * @return キーが存在しない場合、デフォルト値
      *          存在する場合、値
      */
-    public static String getProperty(final String key, final String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+    public String getProperty(final String key, final String defaultValue) {
+        return this.properties.getProperty(key, defaultValue);
     }
 
 

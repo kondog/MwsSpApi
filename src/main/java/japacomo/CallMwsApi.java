@@ -17,9 +17,13 @@ import java.util.zip.GZIPInputStream;
 public class CallMwsApi {
     final String spapiAuth = "https://sellingpartnerapi-na.amazon.com";
     final String mediaType = "application/json; charset=utf-8";
-    private TakeSpecifiedProperty prop = new TakeSpecifiedProperty();
+    private TakeSpecifiedProperty prop;
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
+
+    public CallMwsApi(TakeSpecifiedProperty specifiedProp){
+        prop = specifiedProp;
+    }
 
     public Request getOrders(){
         String MarketID =  prop.getProperty("marketID");
@@ -148,7 +152,7 @@ public class CallMwsApi {
             String reportStatusJson = this.callRequest(signedRequest);
             logger.log(Level.INFO, reportStatusJson);
             String reportDocumentId = takeReportDocumentID(reportStatusJson);
-            if(!reportDocumentId.equals("FATAL")){
+            if(reportDocumentId.equals("FATAL")){
                 return "FATAL";
             }
             if(!reportDocumentId.equals("")){

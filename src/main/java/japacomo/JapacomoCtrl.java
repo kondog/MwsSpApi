@@ -17,12 +17,14 @@ public class JapacomoCtrl {
         logger.log(Level.INFO, "/////   START   /////");
         String types[] = {
                 "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL", //通る
-                "GET_FLAT_FILE_OPEN_LISTINGS_DATA", //通る
-                "GET_RESERVED_INVENTORY_DATA", //FATAL
-                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA", //通らない
-                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA", //通らない
-                "GET_RESERVED_INVENTORY_DATA", //通らない
+//                "GET_FLAT_FILE_OPEN_LISTINGS_DATA", //通る
+//                "GET_RESERVED_INVENTORY_DATA", //FATAL
+//                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA", //通らない
+//                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA", //通らない
+//                "GET_RESERVED_INVENTORY_DATA", //通らない
         };
+
+        TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
 
         for(String type :types) {
             try {
@@ -30,7 +32,8 @@ public class JapacomoCtrl {
 //                Date endDate = getLastDate(new Date());
                 Date startDate = getYesterday(new Date());
                 Date endDate = getToday(new Date());
-                takeReport(type, startDate, endDate);
+                takeReport(type, startDate, endDate, prop);
+                //TODO:takeReport then send mail.
             }catch(Exception e){
                 logger.log(Level.WARNING, e.toString());
             }
@@ -38,11 +41,11 @@ public class JapacomoCtrl {
         logger.log(Level.INFO, "/////   END   /////");
     }
 
-    public static Boolean takeReport(String reportType, Date start, Date end){
+    public static Boolean takeReport(String reportType, Date start, Date end,TakeSpecifiedProperty prop){
         logger.log(Level.INFO, "***takeReportID***," + reportType +
                                "," + start.toString() +
                                "," + end.toString());
-        CallMwsApi api = new CallMwsApi();
+        CallMwsApi api = new CallMwsApi(prop);
         String reportID = api.takeReportID(
                 reportType,
                 start.toInstant().toString(),
