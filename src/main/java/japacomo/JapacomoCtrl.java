@@ -68,7 +68,7 @@ public class JapacomoCtrl {
         api.takeReportFromURL(dlFile, reportURL);
 
         String unzipFile = "/tmp/" + reportType + dateFormat.format(date) + ".tsv";
-        logger.log(Level.INFO, "*****unzipFile*****" + dlFile + unzipFile);
+        logger.log(Level.INFO, "*****unzipFile*****" + dlFile + "," + unzipFile);
         api.unzipFile(dlFile, unzipFile);
 
         return true;

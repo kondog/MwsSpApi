@@ -5,12 +5,18 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.*;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -228,22 +234,78 @@ public class CallMwsApi {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
             }
         } catch (IOException e) {
-            // handle exception
+            throw new RuntimeException(e);
         }
     }
-    public void unzipFile(String srcStr, String dstStr){
+    public void unzipFile(String srcStr, String dstStr) {
         Path src = Paths.get(srcStr);
         Path dst = Paths.get(dstStr);
+        if (!Files.exists(src)){
+            logger.log(Level.INFO, "file not found," + srcStr);
+            return;
+        }
+        try {
+            if (Files.exists(dst)){Files.delete(dst);}
 
-        try (GZIPInputStream in = new GZIPInputStream(Files.newInputStream(src));
-             OutputStream out = Files.newOutputStream(dst)) {
-            int len;
-            byte[] b = new byte[1024 * 4];
-            while ((len = in.read(b)) != -1) {
-                out.write(b, 0, len);
+            String contentType = Files.probeContentType(src);
+            if (!contentType.equals("application/octet-stream")) {
+                logger.log(Level.INFO, "file " + srcStr + " is not gz," + contentType);
+                Files.copy(src, dst);
+                return;
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
+        try (InputStream fi = Files.newInputStream(src);
+             InputStream gzi = new GzipCompressorInputStream(fi);
+             ArchiveInputStream in = new TarArchiveInputStream(gzi)) {
+
+            ArchiveEntry entry;
+            while ((entry = in.getNextEntry()) != null) {
+                if (!in.canReadEntryData(entry)) {
+                    continue;
+                }
+
+                File file = new File(dstStr);
+                if (entry.isDirectory()) {
+                    if (!file.isDirectory() && !file.mkdirs()) {
+                        throw new IOException("failed to create directory " + file);
+                    }
+                } else {
+                    File parent = file.getParentFile();
+                    if (!parent.isDirectory() && !parent.mkdirs()) {
+                        throw new IOException("failed to create directory " + parent);
+                    }
+                    try (OutputStream o = Files.newOutputStream(file.toPath())) {
+                        IOUtils.copy(in, o);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
