@@ -285,27 +285,5 @@ public class CallMwsApi {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -3,13 +3,14 @@ package test.java;
 import main.java.japacomo.CallMwsApi;
 import main.java.japacomo.TakeSpecifiedProperty;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CallMwsApiTest {
     CallMwsApi mwsapi;
 
-    @Before
-    public void prepare(){
+    @BeforeEach
+    public void setUp(){
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
         mwsapi = new CallMwsApi(prop);
     }
