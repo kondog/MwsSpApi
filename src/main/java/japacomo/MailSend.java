@@ -1,12 +1,20 @@
 package main.java.japacomo;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 public class MailSend {
     static LoggingJapacomo lj = new LoggingJapacomo();
@@ -23,13 +31,23 @@ public class MailSend {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] arrayStr = line.split(",");
-                this.sendMail(arrayStr[0], arrayStr[1]);
+                this.sendMail(arrayStr[0], arrayStr[1], takeAttachmentFiles());
             }
         } catch (IOException e) {
                 System.out.println(e);
         }
     }
-    public void sendMail(String address, String password) {
+    private List<String> takeAttachmentFiles(){
+        String targetDir = "src/test/java/testresources/";
+        File f = new File(targetDir);
+        ArrayList<String> names = new ArrayList<String>(Arrays.asList(f.list()));
+        List<String> files = new ArrayList<String>();
+        for(String name : names){
+            files.add(targetDir + name);
+        }
+        return files;
+    }
+    public void sendMail(String address, String password, List<String> files) {
         try {
             logger.log(Level.INFO, "MailTo:" + address);
             TakeSpecifiedProperty prop = new TakeSpecifiedProperty(
@@ -58,7 +76,7 @@ public class MailSend {
             );
             mimeMessage.setFrom(fromAddress);
 
-            this.setMessageData(mimeMessage, prop);
+            this.setBodyData(mimeMessage, prop, files);
             Transport.send(mimeMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,10 +92,31 @@ public class MailSend {
         return gmailProperty;
     }
 
-    private void setMessageData(MimeMessage mimeMessage, TakeSpecifiedProperty configProp) throws MessagingException {
-        //TODO:need to implement attachment.
+    private void setBodyData(MimeMessage mimeMessage,
+                             TakeSpecifiedProperty configProp,
+                             List<String> files
+    ) throws MessagingException {
         mimeMessage.setSubject(configProp.getProperty("title"), "ISO-2022-JP");
-        mimeMessage.setText(configProp.getProperty("message", "ISO-2022-JP"));
+        BodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setText(configProp.getProperty("message", "ISO-2022-JP"));
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart);
+
+        for(String file : files){
+            BodyPart attachmentBodyPart = makeAttachedBodyPart(file);
+            multipart.addBodyPart(attachmentBodyPart);
+        }
+
+        mimeMessage.setContent(multipart);
+    }
+    private BodyPart makeAttachedBodyPart(String attachFile) throws MessagingException{
+        MimeBodyPart messageBodyPart = new MimeBodyPart();
+        String filename = attachFile;
+        DataSource source = new FileDataSource(filename);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(filename);
+        return messageBodyPart;
     }
 }
 
