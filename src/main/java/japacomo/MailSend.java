@@ -19,7 +19,7 @@ import javax.mail.internet.MimeMultipart;
 public class MailSend {
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
-    public void sendMailFromPropertiyFiles(){
+    public void sendMailFromPropertiyFiles(String targetDir){
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
@@ -31,19 +31,19 @@ public class MailSend {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] arrayStr = line.split(",");
-                this.sendMail(arrayStr[0], arrayStr[1], takeAttachmentFiles());
+                this.sendMail(arrayStr[0], arrayStr[1], takeAttachmentFiles(targetDir));
             }
         } catch (IOException e) {
                 System.out.println(e);
         }
     }
-    private List<String> takeAttachmentFiles(){
-        String targetDir = "src/test/java/testresources/";
+    private List<String> takeAttachmentFiles(String targetDir){
         File f = new File(targetDir);
         ArrayList<String> names = new ArrayList<String>(Arrays.asList(f.list()));
         List<String> files = new ArrayList<String>();
         for(String name : names){
-            files.add(targetDir + name);
+            String ext = name.substring(name.lastIndexOf(".") + 1);
+            if(ext.equals("tsv")){files.add(targetDir + name);}
         }
         return files;
     }

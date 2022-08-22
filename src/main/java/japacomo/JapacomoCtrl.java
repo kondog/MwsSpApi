@@ -1,5 +1,9 @@
 package main.java.japacomo;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,35 +20,47 @@ public class JapacomoCtrl {
     public static void main(String[] args){
         logger.log(Level.INFO, "/////   START   /////");
         String types[] = {
-                "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL", //通る
-//                "GET_FLAT_FILE_OPEN_LISTINGS_DATA", //通る
-//                "GET_RESERVED_INVENTORY_DATA", //FATAL
-//                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA", //通らない
-//                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA", //通らない
-//                "GET_RESERVED_INVENTORY_DATA", //通らない
+                "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL",
+                "GET_FLAT_FILE_OPEN_LISTINGS_DATA",
+                "GET_RESERVED_INVENTORY_DATA",
+                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA",
+                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA",
+                "GET_RESERVED_INVENTORY_DATA",
         };
 
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
 
+        Date targetDate = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String targetDir = prop.getProperty("downloadDir") + dateFormat.format(targetDate) + "/";
+
         for(String type :types) {
             try {
-//                Date startDate = getFirstDate(new Date());
-//                Date endDate = getLastDate(new Date());
                 Date startDate = getYesterday(new Date());
                 Date endDate = getToday(new Date());
-                takeReport(type, startDate, endDate, prop);
+                takeReport(type, startDate, endDate, targetDate, targetDir, prop);
                 //TODO:takeReport then send mail.
             }catch(Exception e){
                 logger.log(Level.WARNING, e.toString());
             }
         }
+
+        MailSend mail = new MailSend();
+        mail.sendMailFromPropertiyFiles(targetDir);
         logger.log(Level.INFO, "/////   END   /////");
     }
 
-    public static Boolean takeReport(String reportType, Date start, Date end,TakeSpecifiedProperty prop){
+    public static Boolean takeReport(String reportType,
+                                     Date start,
+                                     Date end,
+                                     Date targetDate,
+                                     String targetDir,
+                                     TakeSpecifiedProperty prop){
         logger.log(Level.INFO, "***takeReportID***," + reportType +
                                "," + start.toString() +
-                               "," + end.toString());
+                               "," + end.toString() +
+                               "," + targetDir);
+        setupForDownloadReport(targetDir);
         CallMwsApi api = new CallMwsApi(prop);
         String reportID = api.takeReportID(
                 reportType,
@@ -53,21 +69,17 @@ public class JapacomoCtrl {
 
         logger.log(Level.INFO, "*****waitUntilReportCompleted*****" + reportID);
         String reportDocumentID = api.waitUntilReportCompleted(reportID);
-        if(reportDocumentID.equals("FATAL")){
-            return false;
-        }
+        if(reportDocumentID.equals("FATAL")){return false;}
 
         logger.log(Level.INFO, "*****takeReportAccessURL*****" + reportDocumentID);
         String reportURL = api.takeReportAccessURL(reportDocumentID);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        Date date = new Date();
-
+        String fileNameBasis = prop.getProperty("confIdentifier") + reportType;
         logger.log(Level.INFO, "*****takeReportFromURL*****" + reportURL);
-        String dlFile = "/tmp/" + reportType + dateFormat.format(date) + ".gz";
+        String dlFile = targetDir + fileNameBasis + ".gz";
         api.takeReportFromURL(dlFile, reportURL);
 
-        String unzipFile = "/tmp/" + reportType + dateFormat.format(date) + ".tsv";
+        String unzipFile = targetDir + fileNameBasis + ".tsv";
         logger.log(Level.INFO, "*****unzipFile*****" + dlFile + "," + unzipFile);
         api.unzipFile(dlFile, unzipFile);
 
@@ -98,11 +110,6 @@ public class JapacomoCtrl {
         int last = calendar.getActualMaximum(Calendar.DATE);
         calendar.set(Calendar.DATE, last);
 
-//        calendar.set(Calendar.HOUR_OF_DAY, 23);
-//        calendar.set(Calendar.MINUTE, 59);
-//        calendar.set(Calendar.SECOND, 59);
-//        calendar.set(Calendar.MILLISECOND, 999);
-
         calendar.set(Calendar.HOUR_OF_DAY, 00);
         calendar.set(Calendar.MINUTE, 00);
         calendar.set(Calendar.SECOND, 00);
@@ -115,8 +122,6 @@ public class JapacomoCtrl {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-//        int first = calendar.getActualMinimum(Calendar.DATE);
-//        calendar.set(Calendar.DATE, first);
 
         calendar.set(Calendar.HOUR_OF_DAY, 00);
         calendar.set(Calendar.MINUTE, 00);
@@ -131,8 +136,6 @@ public class JapacomoCtrl {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
-//        int first = calendar.getActualMinimum(Calendar.DATE);
-//        calendar.set(Calendar.DATE, first);
 
         calendar.set(Calendar.HOUR_OF_DAY, 00);
         calendar.set(Calendar.MINUTE, 00);
@@ -140,6 +143,14 @@ public class JapacomoCtrl {
         calendar.set(Calendar.MILLISECOND, 000);
 
         return calendar.getTime();
+    }
+    private static void setupForDownloadReport(String setupDir){
+        try {
+            Path path1 = Paths.get(setupDir);
+            if(!Files.exists(path1)){Files.createDirectory(path1);}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

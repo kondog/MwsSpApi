@@ -165,7 +165,7 @@ public class CallMwsApi {
                 return reportDocumentId;
             }
             try {
-                Thread.sleep(5 * 60 * 1000);
+                Thread.sleep(1 * 60 * 1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

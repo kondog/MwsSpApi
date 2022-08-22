@@ -15,6 +15,6 @@ class MailSendTest {
     @Test
     void sendMail() {
         MailSend ms = new MailSend();
-        ms.sendMailFromPropertiyFiles();
+        ms.sendMailFromPropertiyFiles("src/test/java/testresources/");
     }
 }
