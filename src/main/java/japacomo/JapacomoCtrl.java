@@ -19,6 +19,7 @@ public class JapacomoCtrl {
 
     public static void main(String[] args){
         logger.log(Level.INFO, "/////   START   /////");
+        //TODO types array should be config file.
         String types[] = {
                 "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL",
                 "GET_FLAT_FILE_OPEN_LISTINGS_DATA",
@@ -39,7 +40,6 @@ public class JapacomoCtrl {
                 Date startDate = getYesterday(new Date());
                 Date endDate = getToday(new Date());
                 takeReport(type, startDate, endDate, targetDate, targetDir, prop);
-                //TODO:takeReport then send mail.
             }catch(Exception e){
                 logger.log(Level.WARNING, e.toString());
             }
@@ -74,7 +74,7 @@ public class JapacomoCtrl {
         logger.log(Level.INFO, "*****takeReportAccessURL*****" + reportDocumentID);
         String reportURL = api.takeReportAccessURL(reportDocumentID);
 
-        String fileNameBasis = prop.getProperty("confIdentifier") + reportType;
+        String fileNameBasis = prop.getProperty("confIdentifier") + "_" + reportType;
         logger.log(Level.INFO, "*****takeReportFromURL*****" + reportURL);
         String dlFile = targetDir + fileNameBasis + ".gz";
         api.takeReportFromURL(dlFile, reportURL);
