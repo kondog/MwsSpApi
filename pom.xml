@@ -135,11 +135,16 @@
             <version>30.1-jre</version>
         </dependency>
         <dependency>
-            <groupId>com.java.japacomo</groupId>
-            <artifactId>japacomo</artifactId>
+            <groupId>mylibrary</groupId>
+            <artifactId>sellingpartnerapi</artifactId>
             <version>1.0</version>
+            <!--
+            system scope is not required.
+            this dependency shoud install as local repositry.
+            mvn install:install-file -Dfile=mylib/sellingpartnerapi-aa-java-1.0-jar-with-dependencies.jar -DgroupId=mylibrary -DartifactId=sellingpartnerapi -Dversion=1.0 -Dpackaging=jar
             <scope>system</scope>
             <systemPath>${basedir}/mylib/sellingpartnerapi-aa-java-1.0-jar-with-dependencies.jar</systemPath>
+            -->
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
