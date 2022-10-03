@@ -64,8 +64,8 @@ public class MailSend {
             );
 
             MimeMessage mimeMessage = new MimeMessage(session);
-            mimeMessage.setRecipient(Message.RecipientType.TO,
-                    InternetAddress.parse(prop.getProperty("receiptmailaddress"));
+            mimeMessage.addRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(prop.getProperty("receiptmailaddress")));
 
             InternetAddress fromAddress = new InternetAddress(
                     prop.getProperty("sendmailaddress"),
