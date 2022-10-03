@@ -1,6 +1,6 @@
 package test.java;
 
-import main.java.japacomo.MailSend;
+import japacomo.MailSend;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

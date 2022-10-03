@@ -1,4 +1,4 @@
-package main.java.japacomo;
+package japacomo;
 
 import java.io.IOException;
 import java.nio.file.Files;

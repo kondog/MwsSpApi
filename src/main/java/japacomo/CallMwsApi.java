@@ -1,4 +1,4 @@
-package main.java.japacomo;
+package japacomo;
 
 import com.amazon.SellingPartnerAPIAA.*;
 import com.fasterxml.jackson.core.JsonParseException;

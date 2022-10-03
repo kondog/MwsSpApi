@@ -1,4 +1,4 @@
-package main.java.japacomo;
+package japacomo;
 import java.util.logging.*;
 
 public class LoggingJapacomo {

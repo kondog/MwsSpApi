@@ -1,7 +1,7 @@
 package test.java;
 
-import main.java.japacomo.CallMwsApi;
-import main.java.japacomo.TakeSpecifiedProperty;
+import japacomo.CallMwsApi;
+import japacomo.TakeSpecifiedProperty;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

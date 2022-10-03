@@ -1,4 +1,4 @@
-package main.java.japacomo;
+package japacomo;
 
 public class ReportID{
     public String reportId;

@@ -1,4 +1,4 @@
-package main.java.japacomo;
+package japacomo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
