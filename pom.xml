@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>main.java.japacomo.JapacomoCtrl</mainClass>
+                            <mainClass>japacomo.JapacomoCtrl</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -19,6 +19,17 @@ public class JapacomoCtrl {
 
     public static void main(String[] args){
         logger.log(Level.INFO, "/////   START   /////");
+        TakeSpecifiedProperty prop_us = new
+                TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
+        takeReportFromSpecifiedProperty(prop_us);
+
+        TakeSpecifiedProperty prop_uk = new
+                TakeSpecifiedProperty("src/main/resources/conf/uk.config.properties");
+        takeReportFromSpecifiedProperty(prop_uk);
+        logger.log(Level.INFO, "/////   END   /////");
+    }
+
+    public static void takeReportFromSpecifiedProperty(TakeSpecifiedProperty prop){
         //TODO types array should be config file.
         String types[] = {
                 "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL",
@@ -28,8 +39,6 @@ public class JapacomoCtrl {
                 "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA",
                 "GET_RESERVED_INVENTORY_DATA",
         };
-
-        TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
 
         Date targetDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -47,9 +56,7 @@ public class JapacomoCtrl {
 
         MailSend mail = new MailSend();
         mail.sendMailFromPropertiyFiles(targetDir);
-        logger.log(Level.INFO, "/////   END   /////");
     }
-
     public static Boolean takeReport(String reportType,
                                      Date start,
                                      Date end,
@@ -147,7 +154,7 @@ public class JapacomoCtrl {
     private static void setupForDownloadReport(String setupDir){
         try {
             Path path1 = Paths.get(setupDir);
-            if(!Files.exists(path1)){Files.createDirectory(path1);}
+            if(!Files.exists(path1)){Files.createDirectories(path1);}
         } catch (IOException e) {
             e.printStackTrace();
         }

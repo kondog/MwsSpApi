@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 public class CallMwsApi {
-    final String spapiAuth = "https://sellingpartnerapi-na.amazon.com";
     final String mediaType = "application/json; charset=utf-8";
     private TakeSpecifiedProperty prop;
     static LoggingJapacomo lj = new LoggingJapacomo();
@@ -33,9 +32,10 @@ public class CallMwsApi {
 
     public Request getOrders(){
         String MarketID =  prop.getProperty("marketID");
+        String spApiEndPoint = prop.getProperty("spApiEndPoint");
         MediaType MIMEType= MediaType.parse(mediaType);
         Request request = new Request.Builder()
-                .url(spapiAuth + "/orders/v0/orders?MarketplaceIds=" + MarketID + "&CreatedAfter=2022-04-01")
+                .url(spApiEndPoint + "/orders/v0/orders?MarketplaceIds=" + MarketID + "&CreatedAfter=2022-04-01")
                 .get()
                 .build()
                 ;
@@ -52,8 +52,9 @@ public class CallMwsApi {
         reqBody.append("\"marketplaceIds\":[\"" + prop.getProperty("marketID") + "\"]");
         reqBody.append("}");
 
+        String spApiEndPoint = prop.getProperty("spApiEndPoint");
         Request request = new Request.Builder()
-                .url(spapiAuth + "/reports/2021-06-30/reports")
+                .url(spApiEndPoint + "/reports/2021-06-30/reports")
                 .post(RequestBody.create(MIMEType, reqBody.toString()))
                 .build()
                 ;
@@ -143,8 +144,9 @@ public class CallMwsApi {
 
     public Request takeReportRequestFromID(String reportID) {
         MediaType MIMEType= MediaType.parse(mediaType);
+        String spApiEndPoint = prop.getProperty("spApiEndPoint");
         Request request = new Request.Builder()
-                .url(spapiAuth + "/reports/2021-06-30/reports/" + reportID)
+                .url(spApiEndPoint + "/reports/2021-06-30/reports/" + reportID)
                 .get()
                 .build()
                 ;
@@ -197,8 +199,9 @@ public class CallMwsApi {
 
     private Request takeReportRequestFromDocumentID(String documentID){
         MediaType MIMEType= MediaType.parse(mediaType);
+        String spApiEndPoint = prop.getProperty("spApiEndPoint");
         Request request = new Request.Builder()
-                .url(spapiAuth + "/reports/2021-06-30/documents/" + documentID)
+                .url(spApiEndPoint + "/reports/2021-06-30/documents/" + documentID)
                 .get()
                 .build()
                 ;
