@@ -46,7 +46,7 @@ public class JapacomoCtrl {
 
         for(String type :types) {
             try {
-                Date startDate = getYesterday(new Date());
+                Date startDate = getYesterday(new Date(), -1);
                 Date endDate = getToday(new Date());
                 takeReport(type, startDate, endDate, targetDate, targetDir, prop);
             }catch(Exception e){
@@ -137,12 +137,12 @@ public class JapacomoCtrl {
 
         return calendar.getTime();
     }
-    public static Date getYesterday(Date date) {
+    public static Date getYesterday(Date date, int diff) {
         if (date==null) return null;
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.DAY_OF_MONTH, diff);
 
         calendar.set(Calendar.HOUR_OF_DAY, 00);
         calendar.set(Calendar.MINUTE, 00);
