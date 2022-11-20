@@ -46,8 +46,8 @@ public class JapacomoCtrl {
 
         for(String type :types) {
             try {
-                Date startDate = getYesterday(new Date(), -1);
-                Date endDate = getToday(new Date());
+                Date startDate = getYesterday(new Date(), -2, prop.getProperty("timeZone"));
+                Date endDate = getToday(new Date(), prop.getProperty("timeZone"));
                 takeReport(type, startDate, endDate, targetDate, targetDir, prop);
             }catch(Exception e){
                 logger.log(Level.WARNING, e.toString());
@@ -63,7 +63,8 @@ public class JapacomoCtrl {
                                      Date targetDate,
                                      String targetDir,
                                      TakeSpecifiedProperty prop){
-        logger.log(Level.INFO, "***takeReportID***," + reportType +
+        logger.log(Level.INFO, "***010_takeReportID***," + prop.getProperty("confIdentifier") +
+                               "," + reportType +
                                "," + start.toString() +
                                "," + end.toString() +
                                "," + targetDir);
@@ -74,29 +75,36 @@ public class JapacomoCtrl {
                 start.toInstant().toString(),
                 end.toInstant().toString());
 
-        logger.log(Level.INFO, "*****waitUntilReportCompleted*****" + reportID);
+        logger.log(Level.INFO, "*****020_waitUntilReportCompleted*****" + reportID);
         String reportDocumentID = api.waitUntilReportCompleted(reportID);
         if(reportDocumentID.equals("FATAL")){return false;}
 
-        logger.log(Level.INFO, "*****takeReportAccessURL*****" + reportDocumentID);
+        logger.log(Level.INFO, "*****030_takeReportAccessURL*****" + reportDocumentID);
         String reportURL = api.takeReportAccessURL(reportDocumentID);
 
         String fileNameBasis = prop.getProperty("confIdentifier") + "_" + reportType;
-        logger.log(Level.INFO, "*****takeReportFromURL*****" + reportURL);
+        logger.log(Level.INFO, "*****040_takeReportFromURL*****" + reportURL);
         String dlFile = targetDir + fileNameBasis + ".gz";
         api.takeReportFromURL(dlFile, reportURL);
 
         String unzipFile = targetDir + fileNameBasis + ".tsv";
-        logger.log(Level.INFO, "*****unzipFile*****" + dlFile + "," + unzipFile);
+        logger.log(Level.INFO, "*****050_unzipFile*****" + dlFile + "," + unzipFile);
         api.unzipFile(dlFile, unzipFile);
 
         return true;
     }
-    public static Date getFirstDate(Date date) {
+
+    private static Calendar initializeCalendar(String timeZone){
+        Calendar calendar = Calendar.getInstance();
+        TimeZone tz = TimeZone.getTimeZone(timeZone);
+        calendar.setTimeZone(tz);
+        return calendar;
+    }
+    public static Date getFirstDate(Date date,String timeZone) {
 
         if (date==null) return null;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = initializeCalendar(timeZone);
         calendar.setTime(date);
         int first = calendar.getActualMinimum(Calendar.DATE);
         calendar.set(Calendar.DATE, first);
@@ -108,11 +116,11 @@ public class JapacomoCtrl {
 
         return calendar.getTime();
     }
-    public static Date getLastDate(Date date) {
+    public static Date getLastDate(Date date, String timeZone) {
 
         if (date == null) return null;
 
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar calendar = initializeCalendar(timeZone);
         calendar.setTime(date);
         int last = calendar.getActualMaximum(Calendar.DATE);
         calendar.set(Calendar.DATE, last);
@@ -124,10 +132,10 @@ public class JapacomoCtrl {
 
         return calendar.getTime();
     }
-    public static Date getToday(Date date) {
+    public static Date getToday(Date date, String timeZone) {
         if (date==null) return null;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = initializeCalendar(timeZone);
         calendar.setTime(date);
 
         calendar.set(Calendar.HOUR_OF_DAY, 00);
@@ -137,10 +145,10 @@ public class JapacomoCtrl {
 
         return calendar.getTime();
     }
-    public static Date getYesterday(Date date, int diff) {
+    public static Date getYesterday(Date date, int diff, String timeZone) {
         if (date==null) return null;
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = initializeCalendar(timeZone);
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, diff);
 
