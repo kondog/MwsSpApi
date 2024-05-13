@@ -26,6 +26,10 @@ public class JapacomoCtrl {
         TakeSpecifiedProperty prop_uk = new
                 TakeSpecifiedProperty("src/main/resources/conf/uk.config.properties");
         takeReportFromSpecifiedProperty(prop_uk);
+
+        TakeSpecifiedProperty prop_cn = new
+                TakeSpecifiedProperty("src/main/resources/conf/cn.config.properties");
+        takeReportFromSpecifiedProperty(prop_cn);
         logger.log(Level.INFO, "/////   END   /////");
     }
 
