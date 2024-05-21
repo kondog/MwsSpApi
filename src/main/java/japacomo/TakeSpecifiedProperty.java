@@ -40,6 +40,10 @@ public class TakeSpecifiedProperty {
         return this.properties.getProperty(key, defaultValue);
     }
 
+    public String[] getPropertyAsArray(final String key, final String delimiter){
+        String valueAsCSV = this.properties.getProperty(key);
+        return valueAsCSV.split(delimiter);
+    }
 
 
 }

@@ -34,15 +34,7 @@ public class JapacomoCtrl {
     }
 
     public static void takeReportFromSpecifiedProperty(TakeSpecifiedProperty prop){
-        //TODO types array should be config file.
-        String types[] = {
-                "GET_AMAZON_FULFILLED_SHIPMENTS_DATA_GENERAL",
-                "GET_FLAT_FILE_OPEN_LISTINGS_DATA",
-                "GET_RESERVED_INVENTORY_DATA",
-                "GET_FBA_ESTIMATED_FBA_FEES_TXT_DATA",
-                "GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA",
-                "GET_RESERVED_INVENTORY_DATA",
-        };
+        String types[] = prop.getPropertyAsArray("downloadReportTypes", ",");
 
         Date targetDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
