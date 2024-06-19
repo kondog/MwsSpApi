@@ -16,10 +16,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
+
 public class CallMwsApi {
     final String mediaType = "application/json; charset=utf-8";
     private TakeSpecifiedProperty prop;
