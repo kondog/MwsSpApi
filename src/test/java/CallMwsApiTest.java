@@ -25,4 +25,12 @@ class CallMwsApiTest {
                 "src/test/java/testresources/test.txt");
     }
 
+    @Test
+    public void testCallLowestAPI() {
+        TakeSpecifiedProperty prop = new TakeSpecifiedProperty(
+                "src/main/resources/conf/us.config.properties");
+        mwsapi = new CallMwsApi(prop);
+        mwsapi.takeLowestPricedOffersForASIN("B000ALF4F0", "New");
+    }
+
 }

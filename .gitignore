@@ -48,3 +48,6 @@ build/
 *.log
 *.swp
 *.bak
+*.json
+*.csv
+

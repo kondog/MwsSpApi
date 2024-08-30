@@ -6,9 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,24 +14,34 @@ public class JapacomoCtrl {
 
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
+    static DateCtrlSet dateCtrl;
 
     public static void main(String[] args){
-        logger.log(Level.INFO, "/////   START   /////");
-        TakeSpecifiedProperty prop_us = new
-                TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
-        takeReportFromSpecifiedProperty(prop_us);
+        logger.log(Level.INFO, "/////   START:" + args[0] +"   /////");
+            TakeSpecifiedProperty prop_us = new
+                    TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
+            TakeSpecifiedProperty prop_uk = new
+                    TakeSpecifiedProperty("src/main/resources/conf/uk.config.properties");
+            TakeSpecifiedProperty prop_cn = new
+                    TakeSpecifiedProperty("src/main/resources/conf/cn.config.properties");
 
-        TakeSpecifiedProperty prop_uk = new
-                TakeSpecifiedProperty("src/main/resources/conf/uk.config.properties");
-        takeReportFromSpecifiedProperty(prop_uk);
-
-        TakeSpecifiedProperty prop_cn = new
-                TakeSpecifiedProperty("src/main/resources/conf/cn.config.properties");
-        takeReportFromSpecifiedProperty(prop_cn);
+        switch (args[0]) {
+            //TODO:it should be common interface class among takereport and check seller count increment.
+            case "TakeReport": {
+                //TODO:takeReport classes should devide another package.
+                takeReportFromSpecifiedProperty(prop_us);
+                takeReportFromSpecifiedProperty(prop_uk);
+                takeReportFromSpecifiedProperty(prop_cn);
+            }
+            case "CheckSellerCountIncrement": {
+                CheckSellerCountIncrement(prop_us);
+            }
+        }
         logger.log(Level.INFO, "/////   END   /////");
     }
 
     public static void takeReportFromSpecifiedProperty(TakeSpecifiedProperty prop){
+        //TODO:make class DownloadReport and move implementation to there.
         String types[] = prop.getPropertyAsArray("downloadReportTypes", ",");
 
         Date targetDate = new Date();
@@ -42,16 +50,16 @@ public class JapacomoCtrl {
 
         for(String type :types) {
             try {
-                Date startDate = getYesterday(new Date(), -2, prop.getProperty("timeZone"));
-                Date endDate = getToday(new Date(), prop.getProperty("timeZone"));
+                Date startDate = dateCtrl.getYesterday(new Date(), -2, prop.getProperty("timeZone"));
+                Date endDate = dateCtrl.getToday(new Date(), prop.getProperty("timeZone"));
                 takeReport(type, startDate, endDate, targetDate, targetDir, prop);
             }catch(Exception e){
                 logger.log(Level.WARNING, e.toString());
             }
         }
 
-        MailSend mail = new MailSend();
-        mail.sendMailFromPropertiyFiles(targetDir);
+        MailSend mail = new MailSend(MailSend.MailType.REPROT);
+        mail.SendMailWithDirFromPropertiesFile(targetDir);
     }
     public static Boolean takeReport(String reportType,
                                      Date start,
@@ -89,72 +97,6 @@ public class JapacomoCtrl {
 
         return true;
     }
-
-    private static Calendar initializeCalendar(String timeZone){
-        Calendar calendar = Calendar.getInstance();
-        TimeZone tz = TimeZone.getTimeZone(timeZone);
-        calendar.setTimeZone(tz);
-        return calendar;
-    }
-    public static Date getFirstDate(Date date,String timeZone) {
-
-        if (date==null) return null;
-
-        Calendar calendar = initializeCalendar(timeZone);
-        calendar.setTime(date);
-        int first = calendar.getActualMinimum(Calendar.DATE);
-        calendar.set(Calendar.DATE, first);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-        calendar.set(Calendar.MILLISECOND, 000);
-
-        return calendar.getTime();
-    }
-    public static Date getLastDate(Date date, String timeZone) {
-
-        if (date == null) return null;
-
-        Calendar calendar = initializeCalendar(timeZone);
-        calendar.setTime(date);
-        int last = calendar.getActualMaximum(Calendar.DATE);
-        calendar.set(Calendar.DATE, last);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-        calendar.set(Calendar.MILLISECOND, 000);
-
-        return calendar.getTime();
-    }
-    public static Date getToday(Date date, String timeZone) {
-        if (date==null) return null;
-
-        Calendar calendar = initializeCalendar(timeZone);
-        calendar.setTime(date);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-        calendar.set(Calendar.MILLISECOND, 000);
-
-        return calendar.getTime();
-    }
-    public static Date getYesterday(Date date, int diff, String timeZone) {
-        if (date==null) return null;
-
-        Calendar calendar = initializeCalendar(timeZone);
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, diff);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 00);
-        calendar.set(Calendar.MINUTE, 00);
-        calendar.set(Calendar.SECOND, 00);
-        calendar.set(Calendar.MILLISECOND, 000);
-
-        return calendar.getTime();
-    }
     private static void setupForDownloadReport(String setupDir){
         try {
             Path path1 = Paths.get(setupDir);
@@ -163,5 +105,14 @@ public class JapacomoCtrl {
             e.printStackTrace();
         }
     }
+
+    public static void CheckSellerCountIncrement(TakeSpecifiedProperty prop) {
+        CheckSellerCountIncrementCtrl checkIncr =
+            new CheckSellerCountIncrementCtrl(prop);
+        String asinListFilePath = prop.getProperty("asinListFilePathForCheckSellerCountIncr");
+        TakeSpecifiedProperty asin_list = new TakeSpecifiedProperty(asinListFilePath);
+        String asins[] = prop.getPropertyAsArray("asinList", ",");
+    }
+
 
 }

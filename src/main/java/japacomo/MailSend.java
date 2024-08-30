@@ -19,7 +19,15 @@ import javax.mail.internet.MimeMultipart;
 public class MailSend {
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
-    public void sendMailFromPropertiyFiles(String targetDir){
+
+    static public enum MailType{REPROT,COUNTINCR}
+    static private MailType specifiedType;
+    public MailSend(MailType mp){
+        specifiedType = mp;
+    }
+    private MailSend(){} //to kill constructor with no augument.
+
+    public void SendMailWithDirFromPropertiesFile(String targetDir){
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
@@ -37,6 +45,25 @@ public class MailSend {
                 System.out.println(e);
         }
     }
+    public void SendMailWithFileFromPropertiesFile(String targetFile){
+        String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
+        File file = new File(propertyFilePath);
+        if (!file.exists()) {
+            System.out.print("ファイルが存在しません");
+            return;
+        }
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] arrayStr = line.split(",");
+                this.sendMail(arrayStr[0], arrayStr[1], List.of(targetFile));
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
     private List<String> takeAttachmentFiles(String targetDir){
         File f = new File(targetDir);
         ArrayList<String> names = new ArrayList<String>(Arrays.asList(f.list()));
@@ -50,8 +77,21 @@ public class MailSend {
     public void sendMail(String address, String password, List<String> files) {
         try {
             logger.log(Level.INFO, "MailTo:" + address);
-            TakeSpecifiedProperty prop = new TakeSpecifiedProperty(
-                    "src/main/resources/conf/mailfixed.config.properties");
+
+            TakeSpecifiedProperty prop;
+            switch(specifiedType) {
+                case MailType.REPROT: {
+                    prop = new TakeSpecifiedProperty(
+                            "src/main/resources/conf/mailfixed.config.properties");
+                    break;
+                }
+                case MailType.COUNTINCR: {
+                    prop = new TakeSpecifiedProperty(
+                            "src/main/resources/conf/mailfixedForCheckIncr.config.properties");
+                    break;
+                }
+                default:{return;}
+            }
             Properties gmailProperty = this.takeGmailInstance(prop);
 
             Session session = Session.getInstance(

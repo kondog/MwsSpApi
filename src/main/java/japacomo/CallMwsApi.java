@@ -288,4 +288,31 @@ public class CallMwsApi {
             throw new UncheckedIOException(e);
         }
     }
+
+    public String takeLowestPricedOffersForASIN(String ASIN, String itemCondition){
+        logger.log(Level.INFO,
+                "takeLowestPricedOffersForASIN ASIN:" + ASIN +
+                " Condition:" + itemCondition
+        );
+        Request request = makeLowestPricedOffersForASINRequest(ASIN, itemCondition);
+        Request signedRequest = this.makeRequestSigned(request);
+        String lowestPricedOffersForASIN = this.callRequest(signedRequest);
+//        logger.log(Level.INFO, lowestPricedOffersForASIN);
+        return lowestPricedOffersForASIN;
+
+    }
+    public Request makeLowestPricedOffersForASINRequest(String ASIN, String itemCondition){
+        String MarketID =  prop.getProperty("marketID");
+        String spApiEndPoint = prop.getProperty("spApiEndPoint");
+        MediaType MIMEType= MediaType.parse(mediaType);
+        Request request = new Request.Builder()
+                .url(spApiEndPoint + "/products/pricing/v0/items/" + ASIN +
+                        "/offers?MarketplaceId=" + MarketID +
+                        "&ItemCondition=" + itemCondition)
+                .get()
+                .build()
+                ;
+        return request;
+
+    }
 }
