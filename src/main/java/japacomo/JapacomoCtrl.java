@@ -36,6 +36,10 @@ public class JapacomoCtrl {
             case "CheckSellerCountIncrement": {
                 CheckSellerCountIncrement(prop_us);
             }
+            case "Test":{
+                //todo: want to implement check configuration process.
+                //for example, check config file exists, check directory exists, etc.
+            }
         }
         logger.log(Level.INFO, "/////   END   /////");
     }
