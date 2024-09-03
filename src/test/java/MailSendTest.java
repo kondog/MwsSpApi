@@ -12,7 +12,7 @@ class MailSendTest {
 
     @Test
     void sendMail() {
-        MailSend ms = new MailSend(MailSend.MailType.REPROT);
+        MailSend ms = new MailSend(MailSend.MailType.REPORT);
         ms.SendMailWithDirFromPropertiesFile("src/test/java/testresources/");
     }
 }

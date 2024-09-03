@@ -58,7 +58,7 @@ public class JapacomoCtrl {
             }
         }
 
-        MailSend mail = new MailSend(MailSend.MailType.REPROT);
+        MailSend mail = new MailSend(MailSend.MailType.REPORT);
         mail.SendMailWithDirFromPropertiesFile(targetDir);
     }
     public static Boolean takeReport(String reportType,

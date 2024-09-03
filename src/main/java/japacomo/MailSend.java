@@ -20,7 +20,7 @@ public class MailSend {
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
 
-    static public enum MailType{REPROT,COUNTINCR}
+    static public enum MailType{REPORT,COUNTINCR}
     static private MailType specifiedType;
     public MailSend(MailType mp){
         specifiedType = mp;
@@ -31,7 +31,7 @@ public class MailSend {
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
-            System.out.print("ファイルが存在しません");
+            logger.log(Level.SEVERE, String.format("File Not Found,%s", propertyFilePath));
             return;
         }
         try (FileReader fileReader = new FileReader(file);
@@ -80,12 +80,12 @@ public class MailSend {
 
             TakeSpecifiedProperty prop;
             switch(specifiedType) {
-                case MailType.REPROT: {
+                case REPORT: {
                     prop = new TakeSpecifiedProperty(
                             "src/main/resources/conf/mailfixed.config.properties");
                     break;
                 }
-                case MailType.COUNTINCR: {
+                case COUNTINCR: {
                     prop = new TakeSpecifiedProperty(
                             "src/main/resources/conf/mailfixedForCheckIncr.config.properties");
                     break;
