@@ -1,0 +1,26 @@
+9月 03, 2024 10:28:44 午前 japacomo.CheckSellerCountIncrementCtrl takeLowestPricedOffersForASINS
+情報: takeLowestPricedOffersForASINS
+9月 03, 2024 10:28:44 午前 japacomo.CheckSellerCountIncrementCtrl takeOfferCountInfoFromApi
+情報: takeOfferCountInfoFromApi
+9月 03, 2024 10:28:44 午前 japacomo.CallMwsApi takeLowestPricedOffersForASIN
+情報: takeLowestPricedOffersForASIN ASIN:B000ALF4F0 Condition:New
+9月 03, 2024 10:28:45 午前 japacomo.CallMwsApi callRequest
+情報: Request{method=GET, url=https://sellingpartnerapi-na.amazon.com/products/pricing/v0/items/B000ALF4F0/offers?MarketplaceId=ATVPDKIKX0DER&ItemCondition=New, tag=Request{method=GET, url=https://sellingpartnerapi-na.amazon.com/products/pricing/v0/items/B000ALF4F0/offers?MarketplaceId=ATVPDKIKX0DER&ItemCondition=New, tag=null}}
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl outputToResultOfTakeOfferCountInfo
+情報: outputToResultOfTakeOfferCountInfo
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl outputToResultOfTakeOfferCountInfo
+情報: /Users/yuichiro/code/japacomo/MwsSpApi/MwsSpApi/output/us/CheckSellerCountIncrement/010_GetItemOffersResult/20240902.csv
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl outputToResultOfTakeOfferCountInfo
+警告: output/us/CheckSellerCountIncrement/010_GetItemOffersResult/20240902.csv is exits, overwrite!
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl compareResultTodayAndYesterdayThenMakeResultFile
+情報: compareResultTodayAndYesterdayThenMakeResultFile
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl compareResultTodayAndYesterdayThenMakeResultFile
+情報: try to compare files,output/us/CheckSellerCountIncrement/010_GetItemOffersResult/20240902.csv,output/us/CheckSellerCountIncrement/010_GetItemOffersResult/20240901.csv then output output/us/CheckSellerCountIncrement/020_CompareResult/20240902.csv
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl takeTargetAsinLineFromFile
+重大: java.io.FileNotFoundException: output/us/CheckSellerCountIncrement/010_GetItemOffersResult/20240901.csv (No such file or directory)
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl compareResultTodayAndYesterday
+情報: ASIN,B000ALF4F0,today,[B000ALF4F0,Success,2,Amazon,new,1, B000ALF4F0,Success,2,Merchant,new,1],yesterday,[]
+9月 03, 2024 10:28:45 午前 japacomo.CheckSellerCountIncrementCtrl mailCheckSellerCountIncrement
+情報: mailCheckSellerCountIncrement
+9月 03, 2024 10:28:45 午前 japacomo.MailSend sendMail
+情報: MailTo:stepper97531@gmail.com

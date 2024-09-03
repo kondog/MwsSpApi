@@ -5,6 +5,8 @@ import json.GetItemOffers.NumberOfOffer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -16,6 +18,7 @@ import java.util.logging.Logger;
 
 
 public class CheckSellerCountIncrementCtrl {
+    private static final Log log = LogFactory.getLog(CheckSellerCountIncrementCtrl.class);
     private final TakeSpecifiedProperty prop;
     static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = lj.logger;
@@ -23,6 +26,7 @@ public class CheckSellerCountIncrementCtrl {
 
     public CheckSellerCountIncrementCtrl(TakeSpecifiedProperty prop){this.prop = prop;}
     public List<String> takeLowestPricedOffersForASINS(){
+        logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         String asinListFilePath = prop.getProperty("asinListFilePathForCheckSellerCountIncr");
         TakeSpecifiedProperty asin_list = new TakeSpecifiedProperty(asinListFilePath);
         String asins[] = asin_list.getPropertyAsArray("asinList", ",");
@@ -35,6 +39,7 @@ public class CheckSellerCountIncrementCtrl {
         return result;
     }
     private List<String> takeOfferCountInfoFromApi(String[] asins) {
+        logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         List<String> result = new ArrayList<String>();
 
         for (String asin : asins) {
@@ -66,6 +71,8 @@ public class CheckSellerCountIncrementCtrl {
         return result;
     }
     public void outputToResultOfTakeOfferCountInfo(List<String> results){
+        logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
+
         String outputPath = prop.getProperty("itemOfferReulstFilePathForCheckSellerCountIncr");
 
         String yyyymmddFilePath = outputPath +
@@ -88,6 +95,7 @@ public class CheckSellerCountIncrementCtrl {
         }
     }
     public String compareResultTodayAndYesterdayThenMakeResultFile(String[] asins){
+        logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         String outputPath = prop.getProperty("itemOfferReulstFilePathForCheckSellerCountIncr");
 
         String itemOfferResultFileToday = outputPath +
@@ -99,6 +107,8 @@ public class CheckSellerCountIncrementCtrl {
         String compareResultFile = resultOutputPath +
                 dateCtrl.takeTodayAsYYYYMMDD(prop.getProperty("timeZone")) + ".csv";
 
+        logger.log(Level.INFO, String.format("try to compare files,%s,%s then output %s",
+                itemOfferResultFileToday, itemOfferResultFileYesterday, compareResultFile));
         for (String asin : asins) {
             String compareResult = compareResultTodayAndYesterday(
                     asin, itemOfferResultFileToday, itemOfferResultFileYesterday);
@@ -146,9 +156,9 @@ public class CheckSellerCountIncrementCtrl {
             }
             bf.close();
         } catch (FileNotFoundException e){
-            System.out.println("hoge.txt is not found!");
+            logger.log(Level.SEVERE, e.toString());
         } catch (IOException e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, e.toString());
         }
         return results;
     }
@@ -178,6 +188,7 @@ public class CheckSellerCountIncrementCtrl {
     }
 
     private void mailCheckSellerCountIncrement(String attacheFilePath){
+        logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         MailSend ms = new MailSend(MailSend.MailType.COUNTINCR);
         ms.SendMailWithFileFromPropertiesFile(attacheFilePath);
     }

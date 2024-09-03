@@ -6,7 +6,8 @@ public class LoggingJapacomo {
     LoggingJapacomo(){
         try {
             //TODO:logs should output not /tmp/ but local folder src/logs or buraburabura.
-            Handler handler = new FileHandler("/tmp/japacomo.log",true);
+//            Handler handler = new FileHandler("/tmp/japacomo.log",true);
+            Handler handler = new FileHandler("logs/japacomo.log",true);
             logger.addHandler(handler);
             Formatter formatter = new SimpleFormatter();
             handler.setFormatter(formatter);

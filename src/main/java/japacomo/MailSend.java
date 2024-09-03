@@ -49,7 +49,7 @@ public class MailSend {
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
-            System.out.print("ファイルが存在しません");
+            logger.log(Level.SEVERE, String.format("File Not Found,%s", propertyFilePath));
             return;
         }
         try (FileReader fileReader = new FileReader(file);
