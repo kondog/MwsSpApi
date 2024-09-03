@@ -50,4 +50,5 @@ build/
 *.bak
 *.json
 *.csv
+logs/*
 

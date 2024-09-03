@@ -149,7 +149,7 @@ public class CheckSellerCountIncrementCtrl {
             BufferedReader bf = new BufferedReader(fr);
 
             String str;
-            while ((str = bf.readLine()) != null) {	//reallineで１行ごとに文字列を抽出
+            while ((str = bf.readLine()) != null) {
                 if (str.contains(asin)){
                     results.add(str);
                 }
