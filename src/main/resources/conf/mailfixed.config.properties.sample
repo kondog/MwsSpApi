@@ -1,0 +1,12 @@
+mailsmtphost=smtp.gmail.com
+mailsmtpauth=true
+mailsmtpstarttlsenable=true
+mailsmtpport=587
+mailsmtpdebug=true
+
+#receiptmailaddress=stepper97531@gmail.com,homa.10ve.amazon@gmail.com
+receiptmailaddress=stepper97531@gmail.com
+sendmailaddress=stepper97531@gmail.com
+sendmailusername=kondo
+title=Report Files with SP-API.
+message=report files from sp-api. version1.01.

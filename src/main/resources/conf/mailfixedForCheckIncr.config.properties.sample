@@ -1,0 +1,12 @@
+mailsmtphost=smtp.gmail.com
+mailsmtpauth=true
+mailsmtpstarttlsenable=true
+mailsmtpport=587
+mailsmtpdebug=true
+
+#receiptmailaddress=stepper97531@gmail.com,homa.10ve.amazon@gmail.com
+receiptmailaddress=stepper97531@gmail.com
+sendmailaddress=stepper97531@gmail.com
+sendmailusername=kondo
+title=File to Check Offers Increment with SP-API.
+message=File to Check Offers Increment from sp-api. version 1.00.
