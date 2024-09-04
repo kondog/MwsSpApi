@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CheckSellerCountIncrementCtrlTest {
     @Test
-    public void testTakeLowestPricedOffersForASINS(){
+    public void testTakeLowestPricedOffersForASINS() {
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
         CheckSellerCountIncrementCtrl checkIncr = new CheckSellerCountIncrementCtrl(prop);
         checkIncr.takeLowestPricedOffersForASINS();
@@ -36,5 +36,12 @@ public class CheckSellerCountIncrementCtrlTest {
                 List.of("ASINAAAA,STATUS,10,MERCHANT,new,5",
                         "ASINAAAA,STATUS,5,MERCHANT,new,5",
                         "ASINAAAB,STATUS,10,MERCHANT,new,5"));
+    }
+
+    @Test
+    public void testCallOfferCountApiWithAbnormalASINPattern() {
+        TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
+        CheckSellerCountIncrementCtrl checkIncr = new CheckSellerCountIncrementCtrl(prop);
+        checkIncr.takeOfferCountInfoFromApi(new String []{""});
     }
 }

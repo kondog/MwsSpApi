@@ -31,41 +31,46 @@ public class CheckSellerCountIncrementCtrl {
         TakeSpecifiedProperty asin_list = new TakeSpecifiedProperty(asinListFilePath);
         String asins[] = asin_list.getPropertyAsArray("asinList", ",");
 
-        List<String> result = new ArrayList<String>();
-        result = takeOfferCountInfoFromApi(asins);
+        List<String> result = takeOfferCountInfoFromApi(asins);
         outputToResultOfTakeOfferCountInfo(result);
         String resultFilePath = compareResultTodayAndYesterdayThenMakeResultFile(asins);
         mailCheckSellerCountIncrement(resultFilePath);
         return result;
     }
-    private List<String> takeOfferCountInfoFromApi(String[] asins) {
+    public List<String> takeOfferCountInfoFromApi(String[] asins) {
         logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         List<String> result = new ArrayList<String>();
 
         for (String asin : asins) {
-            CallMwsApi mwsApi = new CallMwsApi(this.prop);
-            String condition = prop.getProperty("itemConditionForCheckSellerCountIncr");
-            String lowestPricedOffersForAsin = mwsApi.takeLowestPricedOffersForASIN(asin, condition);
+            try {
+                CallMwsApi mwsApi = new CallMwsApi(this.prop);
+                String condition = prop.getProperty("itemConditionForCheckSellerCountIncr");
+                String lowestPricedOffersForAsin = mwsApi.takeLowestPricedOffersForASIN(asin, condition);
+                logger.log(Level.INFO, lowestPricedOffersForAsin);
 
-            JsonCtrl jsonC = new JsonCtrl();
-            GetItemOffersJson getItemOffersJson = jsonC.makeGsonObj(lowestPricedOffersForAsin);
-            String jsonAsin = getItemOffersJson.getPayload().getAsin();
-            String jsonStatus = getItemOffersJson.getPayload().getStatus();
-            int jsonTotalOfferCount = getItemOffersJson.getPayload().getSummary().getTotalOfferCount();
-            List<NumberOfOffer> offers = getItemOffersJson.getPayload().
-                    getSummary().
-                    getNumberOfOffers();
-            for (int i = 0; i < offers.size(); i++) {
-                String jsonFulfillmentChannel = offers.get(i).getFulfillmentChannel();
-                String jsonCondition = offers.get(i).getCondition();
-                int jsonOfferCount = offers.get(i).getOfferCount();
-                result.add(jsonAsin + ","
-                        + jsonStatus + ","
-                        + String.valueOf(jsonTotalOfferCount) + ","
-                        + jsonFulfillmentChannel + ","
-                        + jsonCondition + ","
-                        + jsonOfferCount
-                );
+                JsonCtrl jsonC = new JsonCtrl();
+                GetItemOffersJson getItemOffersJson = jsonC.makeGsonObj(lowestPricedOffersForAsin);
+                String jsonAsin = getItemOffersJson.getPayload().getAsin();
+                String jsonStatus = getItemOffersJson.getPayload().getStatus();
+                int jsonTotalOfferCount = getItemOffersJson.getPayload().getSummary().getTotalOfferCount();
+                List<NumberOfOffer> offers = getItemOffersJson.getPayload().
+                        getSummary().
+                        getNumberOfOffers();
+                for (int i = 0; i < offers.size(); i++) {
+                    String jsonFulfillmentChannel = offers.get(i).getFulfillmentChannel();
+                    String jsonCondition = offers.get(i).getCondition();
+                    int jsonOfferCount = offers.get(i).getOfferCount();
+                    result.add(jsonAsin + ","
+                            + jsonStatus + ","
+                            + String.valueOf(jsonTotalOfferCount) + ","
+                            + jsonFulfillmentChannel + ","
+                            + jsonCondition + ","
+                            + jsonOfferCount
+                    );
+                }
+            } catch (Exception e) {
+                logger.log(Level.WARNING, String.format("ASIN:%s is something wrong.", asin));
+                logger.log(Level.WARNING, e.toString());
             }
         }
         return result;
