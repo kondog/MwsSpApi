@@ -1,12 +1,13 @@
-mailsmtphost=smtp.gmail.com
+mailsmtphost=smtp.xxx.com
 mailsmtpauth=true
 mailsmtpstarttlsenable=true
-mailsmtpport=587
+mailsmtpport=123
 mailsmtpdebug=true
 
-#receiptmailaddress=stepper97531@gmail.com,homa.10ve.amazon@gmail.com
-receiptmailaddress=stepper97531@gmail.com
-sendmailaddress=stepper97531@gmail.com
-sendmailusername=kondo
-title=File to Check Offers Increment with SP-API.
-message=File to Check Offers Increment from sp-api. version 1.00.
+receiptmailaddress=xxxxx@somehost.com,xxxxx2@somehost.com
+receiptmailaddress=xxxxx@somehost.com
+sendmailaddress=xxxxx@somehost.com
+sendmailusername=user_name
+title=File to Check Offers Increment with SP-API sample title.
+message=File to Check Offers Increment from sp-api. version X.
+

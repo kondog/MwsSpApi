@@ -20,5 +20,8 @@ downloadReportTypes=ReportTypeA,\
 ReportTypeB,\
 ReportTypeC
 
-asinListFilePathForCheckSellerCountIncr=/tmp/xxx.properties
+asinListFilePathForCheckSellerCountIncr=src/main/resources/conf/xxx.properties
 itemConditionForCheckSellerCountIncr=SomeStatus
+itemOfferReulstFilePathForCheckSellerCountIncr=output/some/xxx
+compareReulstFilePathForCheckSellerCountIncr=output/some/xxx
+

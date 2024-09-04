@@ -1,12 +1,12 @@
-mailsmtphost=smtp.gmail.com
+mailsmtphost=smtp.xxx.com
 mailsmtpauth=true
 mailsmtpstarttlsenable=true
-mailsmtpport=587
+mailsmtpport=123
 mailsmtpdebug=true
 
-#receiptmailaddress=stepper97531@gmail.com,homa.10ve.amazon@gmail.com
-receiptmailaddress=stepper97531@gmail.com
-sendmailaddress=stepper97531@gmail.com
-sendmailusername=kondo
-title=Report Files with SP-API.
-message=report files from sp-api. version1.01.
+receiptmailaddress=xxxxx@somehost.com,xxxxx2@somehost.com
+receiptmailaddress=xxxxx@somehost.com
+sendmailaddress=xxxxx@somehost.com
+sendmailusername=user_name
+title=Report Files with SP-API sample title.
+message=report files from sp-api. version X.

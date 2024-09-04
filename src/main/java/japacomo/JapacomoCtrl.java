@@ -32,13 +32,16 @@ public class JapacomoCtrl {
                 takeReportFromSpecifiedProperty(prop_us);
                 takeReportFromSpecifiedProperty(prop_uk);
                 takeReportFromSpecifiedProperty(prop_cn);
+                break;
             }
             case "CheckSellerCountIncrement": {
                 CheckSellerCountIncrement(prop_us);
+                break;
             }
             case "Test":{
                 //todo: want to implement check configuration process.
                 //for example, check config file exists, check directory exists, etc.
+                break;
             }
         }
         logger.log(Level.INFO, "/////   END   /////");
@@ -111,11 +114,13 @@ public class JapacomoCtrl {
     }
 
     public static void CheckSellerCountIncrement(TakeSpecifiedProperty prop) {
+        logger.log(Level.INFO, "***CheckSellerCountIncrement Start***," + prop.getProperty("confIdentifier"));
+
         CheckSellerCountIncrementCtrl checkIncr =
-            new CheckSellerCountIncrementCtrl(prop);
-        String asinListFilePath = prop.getProperty("asinListFilePathForCheckSellerCountIncr");
-        TakeSpecifiedProperty asin_list = new TakeSpecifiedProperty(asinListFilePath);
-        String asins[] = prop.getPropertyAsArray("asinList", ",");
+                new CheckSellerCountIncrementCtrl(prop);
+        checkIncr.takeLowestPricedOffersForASINS();
+
+        logger.log(Level.INFO, "***CheckSellerCountIncrement End***," + prop.getProperty("confIdentifier"));
     }
 
 
