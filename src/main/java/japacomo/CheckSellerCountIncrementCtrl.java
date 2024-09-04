@@ -46,7 +46,6 @@ public class CheckSellerCountIncrementCtrl {
                 CallMwsApi mwsApi = new CallMwsApi(this.prop);
                 String condition = prop.getProperty("itemConditionForCheckSellerCountIncr");
                 String lowestPricedOffersForAsin = mwsApi.takeLowestPricedOffersForASIN(asin, condition);
-                logger.log(Level.INFO, lowestPricedOffersForAsin);
 
                 JsonCtrl jsonC = new JsonCtrl();
                 GetItemOffersJson getItemOffersJson = jsonC.makeGsonObj(lowestPricedOffersForAsin);
