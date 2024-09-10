@@ -78,21 +78,21 @@ public class MailSend {
         try {
             logger.log(Level.INFO, "MailTo:" + address);
 
-            TakeSpecifiedProperty prop;
+            TakeSpecifiedProperty mailContent;
             switch(specifiedType) {
                 case REPORT: {
-                    prop = new TakeSpecifiedProperty(
+                    mailContent = new TakeSpecifiedProperty(
                             "src/main/resources/conf/mailfixed.config.properties");
                     break;
                 }
                 case COUNTINCR: {
-                    prop = new TakeSpecifiedProperty(
+                    mailContent = new TakeSpecifiedProperty(
                             "src/main/resources/conf/mailfixedForCheckIncr.config.properties");
                     break;
                 }
                 default:{return;}
             }
-            Properties gmailProperty = this.takeGmailInstance(prop);
+            Properties gmailProperty = this.takeGmailInstance(mailContent);
 
             Session session = Session.getInstance(
                     gmailProperty,
@@ -105,15 +105,15 @@ public class MailSend {
 
             MimeMessage mimeMessage = new MimeMessage(session);
             mimeMessage.addRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(prop.getProperty("receiptmailaddress")));
+                    InternetAddress.parse(mailContent.getProperty("receiptmailaddress")));
 
             InternetAddress fromAddress = new InternetAddress(
-                    prop.getProperty("sendmailaddress"),
-                    prop.getProperty("sendmailusername")
+                    mailContent.getProperty("sendmailaddress"),
+                    mailContent.getProperty("sendmailusername")
             );
             mimeMessage.setFrom(fromAddress);
 
-            this.setBodyData(mimeMessage, prop, files);
+            this.setBodyData(mimeMessage, mailContent, files);
             Transport.send(mimeMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,16 +135,31 @@ public class MailSend {
     ) throws MessagingException {
         mimeMessage.setSubject(configProp.getProperty("title"), "ISO-2022-JP");
         BodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setText(configProp.getProperty("message", "ISO-2022-JP"));
 
         Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
 
-        for(String file : files){
-            BodyPart attachmentBodyPart = makeAttachedBodyPart(file);
-            multipart.addBodyPart(attachmentBodyPart);
+        switch(specifiedType){
+            case REPORT:{
+                messageBodyPart.setText(configProp.getProperty("message", "ISO-2022-JP"));
+                multipart.addBodyPart(messageBodyPart);
+
+                for(String file : files){
+                    BodyPart attachmentBodyPart = makeAttachedBodyPart(file);
+                    multipart.addBodyPart(attachmentBodyPart);
+                }
+                break;
+            }
+            case COUNTINCR:{
+                String msgBody = configProp.getProperty("message", "ISO-2022-JP");
+                msgBody += "\n";
+                for(String file : files){
+                    msgBody += expandFileContentsToString(file);
+                }
+                messageBodyPart.setText(msgBody);
+                multipart.addBodyPart(messageBodyPart);
+                break;
+            }
         }
-
         mimeMessage.setContent(multipart);
     }
     private BodyPart makeAttachedBodyPart(String attachFile) throws MessagingException{
@@ -154,6 +169,25 @@ public class MailSend {
         messageBodyPart.setDataHandler(new DataHandler(source));
         messageBodyPart.setFileName(filename);
         return messageBodyPart;
+    }
+    private String expandFileContentsToString(String filePath){
+        String fileContent = "";
+        try{
+            File file = new File(filePath);
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String str;
+            while((str = br.readLine()) != null){
+                fileContent += str + "\n";
+            }
+
+            br.close();
+        }catch(FileNotFoundException e){
+            logger.log(Level.SEVERE, e.toString());
+        }catch(IOException e){
+            logger.log(Level.SEVERE, e.toString());
+        }
+        return fileContent;
     }
 }
 

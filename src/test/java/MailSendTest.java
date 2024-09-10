@@ -15,4 +15,10 @@ class MailSendTest {
         MailSend ms = new MailSend(MailSend.MailType.REPORT);
         ms.SendMailWithDirFromPropertiesFile("src/test/java/testresources/");
     }
+
+    @Test
+    void sendMailForCheckIncr(){
+        MailSend ms = new MailSend(MailSend.MailType.COUNTINCR);
+        ms.SendMailWithFileFromPropertiesFile("src/test/java/testresources/testFileForMailSend.txt");
+    }
 }

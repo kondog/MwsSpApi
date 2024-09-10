@@ -44,4 +44,14 @@ public class CheckSellerCountIncrementCtrlTest {
         CheckSellerCountIncrementCtrl checkIncr = new CheckSellerCountIncrementCtrl(prop);
         checkIncr.takeOfferCountInfoFromApi(new String []{""});
     }
+
+    @Test
+    public void testCallOfferCountApiWithSpecifiedASIN(){
+        TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
+        CheckSellerCountIncrementCtrl checkIncr = new CheckSellerCountIncrementCtrl(prop);
+        List<String> result = checkIncr.takeOfferCountInfoFromApi(new String []{"B00AE1C1ZC"});
+        System.out.println(result.toString());
+    }
+
+
 }

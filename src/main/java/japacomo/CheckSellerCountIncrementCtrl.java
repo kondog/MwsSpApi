@@ -172,8 +172,12 @@ public class CheckSellerCountIncrementCtrl {
         int offerCountToday = takeOfferCount(today);
         int offerCountYesterday = takeOfferCount(yesterday);
         if (offerCountToday > offerCountYesterday) {
-            return String.format("Num of Sale is incremented.,ASIN,%s,Yesterday,%d,Today,%d",
-                    asin, offerCountYesterday, offerCountToday);
+            return String.format("Num of Sale is incremented.,ASIN,%s,Yesterday,%d,Today,%d,Link,%s",
+                    asin,
+                    offerCountYesterday,
+                    offerCountToday,
+                    prop.getProperty("linkPrefixForCheckSellerCountIncr") + asin
+            );
         }
         return "";
     }
