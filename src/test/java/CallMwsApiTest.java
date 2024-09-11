@@ -30,7 +30,7 @@ class CallMwsApiTest {
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty(
                 "src/main/resources/conf/us.config.properties");
         mwsapi = new CallMwsApi(prop);
-        System.out.println(mwsapi.takeLowestPricedOffersForASIN("B009WK6ZIU", "New"));
+        System.out.println(mwsapi.takeLowestPricedOffersForASIN("B00AMD7Y68", "New"));
     }
 
 }

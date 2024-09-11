@@ -39,40 +39,61 @@ public class CheckSellerCountIncrementCtrl {
     }
     public List<String> takeOfferCountInfoFromApi(String[] asins) {
         logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
-        List<String> result = new ArrayList<String>();
+        List<String> results = new ArrayList<String>();
 
         for (String asin : asins) {
             try {
-                CallMwsApi mwsApi = new CallMwsApi(this.prop);
-                String condition = prop.getProperty("itemConditionForCheckSellerCountIncr");
-                String lowestPricedOffersForAsin = mwsApi.takeLowestPricedOffersForASIN(asin, condition);
-
-                JsonCtrl jsonC = new JsonCtrl();
-                GetItemOffersJson getItemOffersJson = jsonC.makeGsonObj(lowestPricedOffersForAsin);
-                String jsonAsin = getItemOffersJson.getPayload().getAsin();
-                String jsonStatus = getItemOffersJson.getPayload().getStatus();
-                int jsonTotalOfferCount = getItemOffersJson.getPayload().getSummary().getTotalOfferCount();
-                List<NumberOfOffer> offers = getItemOffersJson.getPayload().
-                        getSummary().
-                        getNumberOfOffers();
-                for (int i = 0; i < offers.size(); i++) {
-                    String jsonFulfillmentChannel = offers.get(i).getFulfillmentChannel();
-                    String jsonCondition = offers.get(i).getCondition();
-                    int jsonOfferCount = offers.get(i).getOfferCount();
-                    result.add(jsonAsin + ","
-                            + jsonStatus + ","
-                            + String.valueOf(jsonTotalOfferCount) + ","
-                            + jsonFulfillmentChannel + ","
-                            + jsonCondition + ","
-                            + jsonOfferCount
-                    );
-                }
+                String apiResult = takeOCIfromApi(asin);
+                if (!apiResult.equals("")) {results.add(apiResult);}
             } catch (Exception e) {
-                logger.log(Level.WARNING, String.format("ASIN:%s is something wrong.", asin));
-                logger.log(Level.WARNING, e.toString());
+                logger.log(Level.WARNING, String.format("ASIN:%s is something wrong.try again.", asin));
+
+                try {
+                    Thread.sleep(30 * 1000); //getItemOffers have limitation, 0.5 api per sec.
+                    String apiResult = takeOCIfromApi(asin);
+                    if (!apiResult.equals("")) {results.add(apiResult);}
+                } catch (Exception e2) {
+                    logger.log(Level.SEVERE, String.format("ASIN:%s is something wrong!!!", asin));
+                    logger.log(Level.SEVERE, e2.toString());
+                }
             }
         }
-        return result;
+        return results;
+    }
+    private String takeOCIfromApi(String asin) throws Exception{
+            Thread.sleep(1500); //getItemOffers have limitation, 0.5 api per sec.
+            CallMwsApi mwsApi = new CallMwsApi(this.prop);
+            String condition = prop.getProperty("itemConditionForCheckSellerCountIncr");
+            String lowestPricedOffersForAsin = mwsApi.takeLowestPricedOffersForASIN(asin, condition);
+
+            JsonCtrl jsonC = new JsonCtrl();
+            GetItemOffersJson getItemOffersJson = jsonC.makeGsonObj(lowestPricedOffersForAsin);
+            String jsonAsin = getItemOffersJson.getPayload().getAsin();
+            String jsonStatus = getItemOffersJson.getPayload().getStatus();
+
+            if (jsonStatus.equals("NoBuyableOffers")){
+                logger.log(Level.WARNING, String.format("ASIN:%s is no buyable offers.", jsonAsin));
+                return(jsonAsin + ","
+                    + jsonStatus + ","
+                    + "0" + "," + "0" + "," + "0" + "," + "0");
+            }
+
+            int jsonTotalOfferCount = getItemOffersJson.getPayload().getSummary().getTotalOfferCount();
+            List<NumberOfOffer> offers = getItemOffersJson.getPayload().getSummary().
+                    getNumberOfOffers();for (int i = 0; i < offers.size(); i++) {
+                String jsonFulfillmentChannel = offers.get(i).getFulfillmentChannel();
+                String jsonCondition = offers.get(i).getCondition();
+                int jsonOfferCount = offers.get(i).getOfferCount();
+                return(jsonAsin + ","
+                        + jsonStatus + ","
+                        + String.valueOf(jsonTotalOfferCount) + ","
+                        + jsonFulfillmentChannel + ","
+                        + jsonCondition + ","
+                        + jsonOfferCount
+                );
+            }
+
+        return "";
     }
     public void outputToResultOfTakeOfferCountInfo(List<String> results){
         logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
