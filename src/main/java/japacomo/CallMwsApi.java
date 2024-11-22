@@ -13,9 +13,11 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -152,21 +154,18 @@ public class CallMwsApi {
         return request;
     }
 
-    public String waitUntilReportCompleted(String reportID){
+    public String waitUntilReportCompleted(String reportID, int waitMinute){
         while(true) {
             Request request = this.takeReportRequestFromID(reportID);
             Request signedRequest = this.makeRequestSigned(request);
             String reportStatusJson = this.callRequest(signedRequest);
             logger.log(Level.INFO, reportStatusJson);
             String reportDocumentId = takeReportDocumentID(reportStatusJson);
-            if(reportDocumentId.equals("FATAL")){
-                return "FATAL";
-            }
-            if(!reportDocumentId.equals("")){
-                return reportDocumentId;
-            }
+            if(reportDocumentId.equals("FATAL")){return "FATAL";}
+            if(reportDocumentId.equals("CANCELLED")){return "CANCELLED";}
+            if(!reportDocumentId.equals("")){return reportDocumentId;}
             try {
-                Thread.sleep(1 * 60 * 1000);
+                Thread.sleep(waitMinute * 60 * 1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -237,55 +236,6 @@ public class CallMwsApi {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-    public void unzipFile(String srcStr, String dstStr) {
-        Path src = Paths.get(srcStr);
-        Path dst = Paths.get(dstStr);
-        if (!Files.exists(src)){
-            logger.log(Level.INFO, "file not found," + srcStr);
-            return;
-        }
-        try {
-            if (Files.exists(dst)){Files.delete(dst);}
-
-            String contentType = Files.probeContentType(src);
-            if (!contentType.equals("application/octet-stream")) {
-                logger.log(Level.INFO, "file " + srcStr + " is not gz," + contentType);
-                Files.copy(src, dst);
-                return;
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-
-        try (InputStream fi = Files.newInputStream(src);
-             InputStream gzi = new GzipCompressorInputStream(fi);
-             ArchiveInputStream in = new TarArchiveInputStream(gzi)) {
-
-            ArchiveEntry entry;
-            while ((entry = in.getNextEntry()) != null) {
-                if (!in.canReadEntryData(entry)) {
-                    continue;
-                }
-
-                File file = new File(dstStr);
-                if (entry.isDirectory()) {
-                    if (!file.isDirectory() && !file.mkdirs()) {
-                        throw new IOException("failed to create directory " + file);
-                    }
-                } else {
-                    File parent = file.getParentFile();
-                    if (!parent.isDirectory() && !parent.mkdirs()) {
-                        throw new IOException("failed to create directory " + parent);
-                    }
-                    try (OutputStream o = Files.newOutputStream(file.toPath())) {
-                        IOUtils.copy(in, o);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
     }
 

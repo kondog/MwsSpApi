@@ -58,6 +58,36 @@ public class DateCtrlSet {
         return calendar;
     }
 
+    public static Date getFirstDateOfLastMonth(Date date, String timeZone){
+        if (date==null) return null;
+
+        Calendar calendar = initializeCalendar(timeZone);
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 00);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+        calendar.set(Calendar.MILLISECOND, 000);
+
+        return getFirstDateOfMonth(calendar.getTime(), timeZone);
+    }
+
+    public static Date getLastDateOfLastMonth(Date date, String timeZone){
+        if (date==null) return null;
+
+        Calendar calendar = initializeCalendar(timeZone);
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 00);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+        calendar.set(Calendar.MILLISECOND, 000);
+
+        return getLastDateOfMonth(calendar.getTime(), timeZone);
+    }
+
     public static Date getFirstDateOfMonth(Date date, String timeZone) {
 
         if (date==null) return null;

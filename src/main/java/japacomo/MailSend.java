@@ -70,7 +70,10 @@ public class MailSend {
         List<String> files = new ArrayList<String>();
         for(String name : names){
             String ext = name.substring(name.lastIndexOf(".") + 1);
-            if(ext.equals("tsv")){files.add(targetDir + name);}
+            //if file size is too big, send file by zipped.
+            //so remove this case, and send all files.
+            //if(ext.equals("tsv")){files.add(targetDir + name);}
+            files.add(targetDir + name);
         }
         return files;
     }

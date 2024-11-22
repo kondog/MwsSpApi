@@ -1,1 +1,1 @@
-this is test.
+text.type.test.txt
