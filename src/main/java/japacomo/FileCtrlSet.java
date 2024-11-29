@@ -53,7 +53,6 @@ public class FileCtrlSet {
             return;
         }
         try {
-
             String contentType = decideContentType(src);
             logger.log(Level.INFO, "content type:" + contentType);
             Path dst;
@@ -61,7 +60,7 @@ public class FileCtrlSet {
                 case "application/octet-stream":
                 case "application/gzip":
                 case "application/x-gzip":
-                    dst = Paths.get(srcFile + ".gz");
+                    dst = Paths.get(srcFile + ".tsv.gz");
                     break;
                 default:
                     dst = Paths.get(srcFile + ".tsv");
