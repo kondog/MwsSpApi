@@ -1,18 +1,15 @@
-import japacomo.CallMwsApi;
 import japacomo.FileCtrlSet;
 import japacomo.TakeSpecifiedProperty;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FileCtrlTest {
     @Test
     public void testUnzipFile(){
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
-        FileCtrlSet.unzipFile("test", "test", false);
-        FileCtrlSet.unzipFile("src/test/java/testresources/text.type.test.txt",
+        FileCtrlSet.setExtentionToFile("test", "test", false);
+        FileCtrlSet.setExtentionToFile("src/test/java/testresources/text.type.test.txt",
                 "src/test/java/testresources/test.txt", false);
-        FileCtrlSet.unzipFile("src/test/java/testresources/test.tar.gz",
+        FileCtrlSet.setExtentionToFile("src/test/java/testresources/test.tar.gz",
                 "src/test/java/testresources/unzipped_test.txt", false);
     }
 
@@ -25,7 +22,7 @@ public class FileCtrlTest {
         //
         //so need to windows puttern.
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
-        FileCtrlSet.unzipFile("src/test/java/testresources/test_FAT.tar.gz",
+        FileCtrlSet.setExtentionToFile("src/test/java/testresources/test_FAT.tar.gz",
                 "src/test/java/testresources/test_FAT.txt",
                 false);
     }

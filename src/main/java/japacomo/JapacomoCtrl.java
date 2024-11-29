@@ -132,12 +132,11 @@ public class JapacomoCtrl {
 
         String fileNameBasis = prop.getProperty("confIdentifier") + "_" + reportType;
         logger.log(Level.INFO, "*****040_takeReportFromURL*****" + reportURL);
-        String dlFile = targetDir + fileNameBasis + ".tsv.gz";
+        String dlFile = targetDir + fileNameBasis;
         api.takeReportFromURL(dlFile, reportURL);
 
-        String unzipFile = targetDir + fileNameBasis + ".tsv";
-        logger.log(Level.INFO, "*****050_unzipFile*****" + dlFile + "," + unzipFile);
-        FileCtrlSet.unzipFile(dlFile, unzipFile, true);
+        logger.log(Level.INFO, "*****050_unzipFile*****" + dlFile);
+        FileCtrlSet.setExtentionToFile(dlFile, true);
 
         return true;
     }

@@ -10,15 +10,12 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.logging.Level;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.tika.Tika;
 import org.apache.tika.io.TikaInputStream;
-import org.apache.tika.metadata.Metadata;
 
 public class FileCtrlSet {
     static LoggingJapacomo lj = new LoggingJapacomo();
@@ -49,40 +46,31 @@ public class FileCtrlSet {
 
         return contentType;
     }
-    public static void unzipFile(String srcStr, String dstStr, Boolean deleteSrcFile) {
-        Path src = Paths.get(srcStr);
-        Path dst = Paths.get(dstStr);
+    public static void setExtentionToFile(String srcFile, Boolean deleteSrcFile) {
+        Path src = Paths.get(srcFile);
         if (!Files.exists(src)){
-            logger.log(Level.INFO, "file not found," + srcStr);
+            logger.log(Level.INFO, "file not found," + srcFile);
             return;
         }
         try {
-            if (Files.exists(dst)){Files.delete(dst);}
 
             String contentType = decideContentType(src);
-
+            logger.log(Level.INFO, "content type:" + contentType);
+            Path dst;
             switch(contentType) {
                 case "application/octet-stream":
-                    if (Files.size(src) <= 1.5 * 1024 * 1024) {
-                        unzipUnixGzipFile(src, dstStr);
-                    } else {
-                        logger.log(Level.INFO, "file size over, no decompress" + srcStr);
-                        return;
-                    }
-                    break;
                 case "application/gzip":
                 case "application/x-gzip":
-                    if (Files.size(src) <= 1.5 * 1024 * 1024) {
-                        unzipWindowsGzipFile(src, dstStr);
-                    } else {
-                        logger.log(Level.INFO, "file size over, no decompress" + srcStr);
-                        return;
-                    }
+                    dst = Paths.get(srcFile + ".gz");
                     break;
                 default:
-                    logger.log(Level.INFO, "file " + srcStr + " is not gz,but " + contentType);
-                    Files.copy(src, dst);
+                    dst = Paths.get(srcFile + ".tsv");
+                    break;
             }
+
+            if (Files.exists(dst)){Files.delete(dst);}
+            Files.copy(src, dst);
+
             if(deleteSrcFile){Files.delete(src);}
         } catch (IOException e) {
             throw new UncheckedIOException(e);
