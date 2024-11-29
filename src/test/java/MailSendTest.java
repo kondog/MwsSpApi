@@ -13,12 +13,12 @@ class MailSendTest {
     @Test
     void sendMail() {
         MailSend ms = new MailSend(MailSend.MailType.REPORT);
-        ms.SendMailWithDirFromPropertiesFile("src/test/java/testresources/");
+        ms.SendMailWithDirFromPropertiesFile("src/test/java/testresources/", "mail send test");
     }
 
     @Test
     void sendMailForCheckIncr(){
         MailSend ms = new MailSend(MailSend.MailType.COUNTINCR);
-        ms.SendMailWithFileFromPropertiesFile("src/test/java/testresources/testFileForMailSend.txt");
+        ms.SendMailWithFileFromPropertiesFile("src/test/java/testresources/testFileForMailSend.txt", "chekIncrTest");
     }
 }

@@ -27,7 +27,7 @@ public class MailSend {
     }
     private MailSend(){} //to kill constructor with no augument.
 
-    public void SendMailWithDirFromPropertiesFile(String targetDir){
+    public void SendMailWithDirFromPropertiesFile(String targetDir, String mailTitlePrefix){
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
@@ -39,13 +39,13 @@ public class MailSend {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] arrayStr = line.split(",");
-                this.sendMail(arrayStr[0], arrayStr[1], takeAttachmentFiles(targetDir));
+                this.sendMail(arrayStr[0], arrayStr[1], takeAttachmentFiles(targetDir), mailTitlePrefix);
             }
         } catch (IOException e) {
                 System.out.println(e);
         }
     }
-    public void SendMailWithFileFromPropertiesFile(String targetFile){
+    public void SendMailWithFileFromPropertiesFile(String targetFile, String mailTitlePrefix){
         String propertyFilePath = "src/main/resources/conf/mailaddress.config.properties";
         File file = new File(propertyFilePath);
         if (!file.exists()) {
@@ -57,7 +57,7 @@ public class MailSend {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] arrayStr = line.split(",");
-                this.sendMail(arrayStr[0], arrayStr[1], List.of(targetFile));
+                this.sendMail(arrayStr[0], arrayStr[1], List.of(targetFile), mailTitlePrefix);
             }
         } catch (IOException e) {
             System.out.println(e);
@@ -77,7 +77,7 @@ public class MailSend {
         }
         return files;
     }
-    public void sendMail(String address, String password, List<String> files) {
+    public void sendMail(String address, String password, List<String> files, String mailTitlePrefix) {
         try {
             logger.log(Level.INFO, "MailTo:" + address);
 
@@ -116,7 +116,7 @@ public class MailSend {
             );
             mimeMessage.setFrom(fromAddress);
 
-            this.setBodyData(mimeMessage, mailContent, files);
+            this.setBodyData(mimeMessage, mailContent, files, mailTitlePrefix);
             Transport.send(mimeMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,9 +134,11 @@ public class MailSend {
 
     private void setBodyData(MimeMessage mimeMessage,
                              TakeSpecifiedProperty configProp,
-                             List<String> files
+                             List<String> files,
+                             String mailTitlePrefix
     ) throws MessagingException {
-        mimeMessage.setSubject(configProp.getProperty("title"), "ISO-2022-JP");
+        mimeMessage.setSubject(configProp.getProperty("title") + " " + mailTitlePrefix
+                , "ISO-2022-JP");
         BodyPart messageBodyPart = new MimeBodyPart();
 
         Multipart multipart = new MimeMultipart();

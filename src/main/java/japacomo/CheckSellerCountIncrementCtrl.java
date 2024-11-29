@@ -25,7 +25,7 @@ public class CheckSellerCountIncrementCtrl {
     static DateCtrlSet dateCtrl;
 
     public CheckSellerCountIncrementCtrl(TakeSpecifiedProperty prop){this.prop = prop;}
-    public List<String> takeLowestPricedOffersForASINS(){
+    public List<String> takeLowestPricedOffersForASINS(String mailTitlePrefix){
         logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         String asinListFilePath = prop.getProperty("asinListFilePathForCheckSellerCountIncr");
         TakeSpecifiedProperty asin_list = new TakeSpecifiedProperty(asinListFilePath);
@@ -34,7 +34,7 @@ public class CheckSellerCountIncrementCtrl {
         List<String> result = takeOfferCountInfoFromApi(asins);
         outputToResultOfTakeOfferCountInfo(result);
         String resultFilePath = compareResultTodayAndYesterdayThenMakeResultFile(asins);
-        mailCheckSellerCountIncrement(resultFilePath);
+        mailCheckSellerCountIncrement(resultFilePath, mailTitlePrefix);
         return result;
     }
     public List<String> takeOfferCountInfoFromApi(String[] asins) {
@@ -216,9 +216,9 @@ public class CheckSellerCountIncrementCtrl {
         return 0;
     }
 
-    private void mailCheckSellerCountIncrement(String attacheFilePath){
+    private void mailCheckSellerCountIncrement(String attacheFilePath, String mailTitlePrefix){
         logger.log(Level.INFO, Thread.currentThread().getStackTrace()[1].getMethodName());
         MailSend ms = new MailSend(MailSend.MailType.COUNTINCR);
-        ms.SendMailWithFileFromPropertiesFile(attacheFilePath);
+        ms.SendMailWithFileFromPropertiesFile(attacheFilePath, mailTitlePrefix);
     }
 }

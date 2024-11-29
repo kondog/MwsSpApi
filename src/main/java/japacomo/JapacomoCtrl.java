@@ -68,6 +68,8 @@ public class JapacomoCtrl {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
         String targetDir = "";
+        String mailTitlePrefix = "";
+
         try{
             switch (specifiedArgument) {
                 case TAKE_REPORT: {
@@ -82,6 +84,7 @@ public class JapacomoCtrl {
                 case TAKE_REPORT_MONTH: {
                     targetDir = prop.getProperty("downloadDir") +
                             dateFormat.format(targetDate) + "_MONTH" + "/";
+                    mailTitlePrefix = "_MONTH";
                     for (String type : types) {
                         Date startDate = DateCtrlSet.getFirstDateOfLastMonth(new Date(), prop.getProperty("timeZone"));
                         Date endDate = DateCtrlSet.getLastDateOfLastMonth(new Date(), prop.getProperty("timeZone"));
@@ -99,7 +102,7 @@ public class JapacomoCtrl {
         }
 
         MailSend mail = new MailSend(MailSend.MailType.REPORT);
-        mail.SendMailWithDirFromPropertiesFile(targetDir);
+        mail.SendMailWithDirFromPropertiesFile(targetDir, prop.getProperty("confIdentifier" + mailTitlePrefix));
     }
     public static Boolean takeReport(String reportType,
                                      Date start,
@@ -154,7 +157,7 @@ public class JapacomoCtrl {
 
         CheckSellerCountIncrementCtrl checkIncr =
                 new CheckSellerCountIncrementCtrl(prop);
-        checkIncr.takeLowestPricedOffersForASINS();
+        checkIncr.takeLowestPricedOffersForASINS(prop.getProperty("confIdentifier"));
 
         logger.log(Level.INFO, "***CheckSellerCountIncrement End***," + prop.getProperty("confIdentifier"));
     }

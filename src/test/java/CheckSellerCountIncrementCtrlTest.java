@@ -19,7 +19,7 @@ public class CheckSellerCountIncrementCtrlTest {
     public void testTakeLowestPricedOffersForASINS() {
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
         CheckSellerCountIncrementCtrl checkIncr = new CheckSellerCountIncrementCtrl(prop);
-        checkIncr.takeLowestPricedOffersForASINS();
+        checkIncr.takeLowestPricedOffersForASINS("fromTest");
         //mail send, then ok. for now.
     }
 
