@@ -6,11 +6,9 @@ public class FileCtrlTest {
     @Test
     public void testUnzipFile(){
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
-        FileCtrlSet.setExtentionToFile("test", "test", false);
-        FileCtrlSet.setExtentionToFile("src/test/java/testresources/text.type.test.txt",
-                "src/test/java/testresources/test.txt", false);
-        FileCtrlSet.setExtentionToFile("src/test/java/testresources/test.tar.gz",
-                "src/test/java/testresources/unzipped_test.txt", false);
+        FileCtrlSet.setExtentionToFile("test", false);
+        FileCtrlSet.setExtentionToFile("src/test/java/testresources/text.type.test.txt",false);
+        FileCtrlSet.setExtentionToFile("src/test/java/testresources/test.tar.gz",false);
     }
 
     @Test
@@ -23,7 +21,6 @@ public class FileCtrlTest {
         //so need to windows puttern.
         TakeSpecifiedProperty prop = new TakeSpecifiedProperty("src/main/resources/conf/us.config.properties");
         FileCtrlSet.setExtentionToFile("src/test/java/testresources/test_FAT.tar.gz",
-                "src/test/java/testresources/test_FAT.txt",
                 false);
     }
 
