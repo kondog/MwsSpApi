@@ -102,7 +102,7 @@ public class JapacomoCtrl {
         }
 
         MailSend mail = new MailSend(MailSend.MailType.REPORT);
-        mail.SendMailWithDirFromPropertiesFile(targetDir, prop.getProperty("confIdentifier" + mailTitlePrefix));
+        mail.SendMailWithDirFromPropertiesFile(targetDir, prop.getProperty("confIdentifier") + mailTitlePrefix);
     }
     public static Boolean takeReport(String reportType,
                                      Date start,
