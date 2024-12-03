@@ -62,7 +62,6 @@ public class JapacomoCtrl {
     public static void takeReportFromSpecifiedProperty(
             TakeSpecifiedProperty prop, String specifiedArgument){
         //TODO:make class DownloadReport and move implementation to there.
-        String types[] = prop.getPropertyAsArray("downloadReportTypes", ",");
 
         Date targetDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -73,6 +72,7 @@ public class JapacomoCtrl {
         try{
             switch (specifiedArgument) {
                 case TAKE_REPORT: {
+                    String types[] = prop.getPropertyAsArray("downloadReportTypes", ",");
                     targetDir = prop.getProperty("downloadDir") + dateFormat.format(targetDate) + "/";
                     for (String type : types) {
                         Date startDate = DateCtrlSet.getYesterday(new Date(), -2, prop.getProperty("timeZone"));
@@ -82,6 +82,7 @@ public class JapacomoCtrl {
                     break;
                 }
                 case TAKE_REPORT_MONTH: {
+                    String types[] = prop.getPropertyAsArray("downloadReportTypes_MONTH", ",");
                     targetDir = prop.getProperty("downloadDir") +
                             dateFormat.format(targetDate) + "_MONTH" + "/";
                     mailTitlePrefix = "_MONTH";
