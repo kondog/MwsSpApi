@@ -88,7 +88,9 @@ public class JapacomoCtrl {
                     mailTitlePrefix = "_MONTH";
                     for (String type : types) {
                         Date startDate = DateCtrlSet.getFirstDateOfLastMonth(new Date(), prop.getProperty("timeZone"));
-                        Date endDate = DateCtrlSet.getLastDateOfLastMonth(new Date(), prop.getProperty("timeZone"));
+                        //end date should be 12/1 00:00 rather than 11/30 00:00.
+                        //Date endDate = DateCtrlSet.getLastDateOfLastMonth(new Date(), prop.getProperty("timeZone"));
+                        Date endDate = DateCtrlSet.getFirstDateOfMonth(new Date(), prop.getProperty("timeZone"));
                         takeReport(type, startDate, endDate, targetDate, targetDir, prop, 10);
                     }
                     break;

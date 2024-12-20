@@ -2,6 +2,7 @@ package japacomo;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -9,6 +10,10 @@ public class TakeSpecifiedProperty {
     private Properties properties;
 
     public TakeSpecifiedProperty(String propertyFilePath){
+        Path path = Paths.get(propertyFilePath);
+        if (!(Files.exists(path))){
+            System.out.println(String.format("File Not Found.:%s", propertyFilePath));
+        }
         properties = new Properties();
         try {
             properties.load(Files.newBufferedReader(Paths.get(propertyFilePath), StandardCharsets.UTF_8));
