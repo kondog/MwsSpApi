@@ -27,6 +27,8 @@ public class JapacomoCtrl {
                 TakeSpecifiedProperty("src/main/resources/conf/uk.config.properties");
         TakeSpecifiedProperty prop_cn = new
                 TakeSpecifiedProperty("src/main/resources/conf/cn.config.properties");
+        TakeSpecifiedProperty prop_jp = new
+                TakeSpecifiedProperty("src/main/resources/conf/jp.config.properties");
 
         String argument = args[0];
 
@@ -37,6 +39,7 @@ public class JapacomoCtrl {
                 takeReportFromSpecifiedProperty(prop_us, argument);
                 takeReportFromSpecifiedProperty(prop_uk, argument);
                 takeReportFromSpecifiedProperty(prop_cn, argument);
+                takeReportFromSpecifiedProperty(prop_jp, argument);
                 break;
             }
             case TAKE_REPORT_MONTH: {
@@ -44,6 +47,7 @@ public class JapacomoCtrl {
                 takeReportFromSpecifiedProperty(prop_us, argument);
                 takeReportFromSpecifiedProperty(prop_uk, argument);
                 takeReportFromSpecifiedProperty(prop_cn, argument);
+                takeReportFromSpecifiedProperty(prop_jp, argument);
                 break;
             }
             case CHECK_SELLER_COUNT_INCR: {
