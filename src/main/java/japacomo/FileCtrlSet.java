@@ -22,7 +22,7 @@ public class FileCtrlSet {
     static Logger logger = LoggingJapacomo.logger;
 
     private FileCtrlSet(){}
-    private static String decideContentType(Path src) throws IOException{
+    public static String decideContentType(Path src) throws IOException{
         System.out.println("decideContentType" + src.toAbsolutePath());
         String contentType = "";
         //            String contentType = Files.probeContentType(src);
@@ -57,7 +57,7 @@ public class FileCtrlSet {
             logger.log(Level.INFO, "content type:" + contentType);
             Path dst;
             switch(contentType) {
-                case "application/octet-stream":
+                //case "application/octet-stream": when file type is sjis txt.
                 case "application/gzip":
                 case "application/x-gzip":
                     dst = Paths.get(srcFile + ".tsv.gz");
