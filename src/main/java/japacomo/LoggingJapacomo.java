@@ -7,19 +7,27 @@ public class LoggingJapacomo {
     
     static {
         instance = new LoggingJapacomo();
-    }
-    
-    private LoggingJapacomo() {
+        logger.setUseParentHandlers(false);
+        
         try {
-            //TODO:logs should output not /tmp/ but local folder src/logs or buraburabura.
-//            Handler handler = new FileHandler("/tmp/japacomo.log",true);
             Handler handler = new FileHandler("logs/japacomo.log", true);
-            logger.addHandler(handler);
-            Formatter formatter = new SimpleFormatter();
+            Formatter formatter = new SimpleFormatter() {
+                @Override
+                public String format(LogRecord record) {
+                    return String.format("%1$tF %1$tT %2$s%n",
+                            record.getMillis(),
+                            record.getMessage());
+                }
+            };
             handler.setFormatter(formatter);
+            logger.addHandler(handler);
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private LoggingJapacomo() {
+        // コンストラクタは空に
     }
     
     public static LoggingJapacomo getInstance() {

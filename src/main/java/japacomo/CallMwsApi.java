@@ -154,6 +154,8 @@ public class CallMwsApi {
     }
 
     public String waitUntilReportCompleted(String reportID, int waitMinute){
+        int retryCount = 0;
+
         while(true) {
             Request request = this.takeReportRequestFromID(reportID);
             Request signedRequest = this.makeRequestSigned(request);
@@ -168,6 +170,12 @@ public class CallMwsApi {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            if(retryCount >= 10){
+                logger.log(Level.WARNING, "retry count over in waitUntilReportCompleted:" + retryCount);
+                return "CANCELLED";
+            }
+            retryCount++;
         }
     }
 
