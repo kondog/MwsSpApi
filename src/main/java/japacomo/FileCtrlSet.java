@@ -18,7 +18,6 @@ import org.apache.tika.Tika;
 import org.apache.tika.io.TikaInputStream;
 
 public class FileCtrlSet {
-    static LoggingJapacomo lj = new LoggingJapacomo();
     static Logger logger = LoggingJapacomo.logger;
 
     private FileCtrlSet(){}

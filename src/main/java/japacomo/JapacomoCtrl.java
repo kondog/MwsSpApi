@@ -12,8 +12,7 @@ import java.util.logging.Logger;
 
 public class JapacomoCtrl {
 
-    static LoggingJapacomo lj = new LoggingJapacomo();
-    static Logger logger = lj.logger;
+    static Logger logger = LoggingJapacomo.logger;
     static DateCtrlSet dateCtrl;
     static final String TAKE_REPORT = "TakeReport";
     static final String TAKE_REPORT_MONTH = "TakeReport_Month";
@@ -73,6 +72,8 @@ public class JapacomoCtrl {
         String targetDir = "";
         String mailTitlePrefix = "";
 
+        logger.log(Level.INFO, "takeReportFromSpecifiedProperty start:" + specifiedArgument);
+
         try{
             switch (specifiedArgument) {
                 case TAKE_REPORT: {
@@ -108,7 +109,11 @@ public class JapacomoCtrl {
             logger.log(Level.WARNING, e.toString());
         }
 
+        logger.log(Level.INFO, "MailSend start:" + MailSend.MailType.REPORT);
         MailSend mail = new MailSend(MailSend.MailType.REPORT);
+
+        logger.log(Level.INFO, "SendMailWithDirFromPropertiesFile:" +
+                targetDir + "," + prop.getProperty("confIdentifier") + mailTitlePrefix);
         mail.SendMailWithDirFromPropertiesFile(targetDir, prop.getProperty("confIdentifier") + mailTitlePrefix);
     }
     public static Boolean takeReport(String reportType,

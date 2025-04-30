@@ -17,8 +17,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 public class MailSend {
-    static LoggingJapacomo lj = new LoggingJapacomo();
-    static Logger logger = lj.logger;
+    static Logger logger = LoggingJapacomo.logger;
 
     static public enum MailType{REPORT,COUNTINCR}
     static private MailType specifiedType;

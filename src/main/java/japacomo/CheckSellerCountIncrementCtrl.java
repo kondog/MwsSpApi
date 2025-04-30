@@ -20,8 +20,7 @@ import java.util.logging.Logger;
 public class CheckSellerCountIncrementCtrl {
     private static final Log log = LogFactory.getLog(CheckSellerCountIncrementCtrl.class);
     private final TakeSpecifiedProperty prop;
-    static LoggingJapacomo lj = new LoggingJapacomo();
-    static Logger logger = lj.logger;
+    static Logger logger = LoggingJapacomo.logger;
     static DateCtrlSet dateCtrl;
 
     public CheckSellerCountIncrementCtrl(TakeSpecifiedProperty prop){this.prop = prop;}

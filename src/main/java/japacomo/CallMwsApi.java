@@ -24,8 +24,7 @@ import java.util.logging.Logger;
 public class CallMwsApi {
     final String mediaType = "application/json; charset=utf-8";
     private TakeSpecifiedProperty prop;
-    static LoggingJapacomo lj = new LoggingJapacomo();
-    static Logger logger = lj.logger;
+    static Logger logger = LoggingJapacomo.logger;
 
     public CallMwsApi(TakeSpecifiedProperty specifiedProp){
         prop = specifiedProp;
